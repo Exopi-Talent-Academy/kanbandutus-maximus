@@ -1,0 +1,38 @@
+{
+  "boards": [
+    {
+      "id": 1,
+      "name": "My Board",
+      "columns": [1, 2, 3]
+    }
+  ],
+  "columns": [
+    {
+      "id": 1,
+      "name": "To Do",
+      "position": 0,
+      "board_id": 1
+    },
+    {
+      "id": 2,
+      "name": "In Progress",
+      "position": 1,
+      "board_id": 1
+    },
+    {
+      "id": 3,
+      "name": "Done",
+      "position": 2,
+      "board_id": 1
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Welcome Task",
+      "description": "Drag me to move",
+      "column_id": 1,
+      "position": 0
+    }
+  ]
+}
