@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Container } from '../../shared/container/container';
+import { Tasks } from '../../services/tasks';
+import { TaskType } from '../../models/types';
 
 @Component({
   selector: 'app-add-new-task',
@@ -8,7 +10,15 @@ import { Container } from '../../shared/container/container';
   styleUrl: './add-new-task.css',
 })
 export class AddNewTask {
+  taskService = inject(Tasks);
+
   addNewTask() {
-    console.log('Add New Task clicked');
+    this.taskService.onEditTask({
+      id: '',
+      title: '',
+      status: TaskType.TODO,
+      assignee: '',
+      description: '',
+    });
   }
 }

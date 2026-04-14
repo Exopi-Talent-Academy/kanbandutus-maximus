@@ -49,4 +49,8 @@ export class App implements OnInit {
   cancelEdit() {
     this.taskService.cancelEditTask();
   }
+
+  isAddTask() {
+    return this.task().id === '';
+  }
 }

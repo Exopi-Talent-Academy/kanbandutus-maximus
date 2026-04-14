@@ -68,6 +68,20 @@
       "status": "TO DO",
       "assignee": "Diana Evans",
       "description": "Description for Task 6"
+    },
+    {
+      "id": "40rKG8iOGBE",
+      "title": "dfdf123",
+      "status": "To Do",
+      "assignee": "Sudhan Poudel",
+      "description": "dfdsfs"
+    },
+    {
+      "id": "vEc8GV-19Rg",
+      "title": "title 2345",
+      "status": "Plan",
+      "assignee": "Rhythm Poudel",
+      "description": "flkdsjflkds"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
