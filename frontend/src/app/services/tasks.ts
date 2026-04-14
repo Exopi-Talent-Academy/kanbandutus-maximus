@@ -3,6 +3,8 @@ import { Task } from '../models/types';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
+const BASE_URL = 'http://localhost:8000/api';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -21,18 +23,18 @@ export class Tasks {
   }
 
   addTask(task: Task): Observable<Task> {
-    return this.http.post<Task>('http://localhost:4201/tasks', task);
+    return this.http.post<Task>(`${BASE_URL}/tasks`, task);
   }
 
   getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>('http://localhost:4201/tasks');
+    return this.http.get<Task[]>(`${BASE_URL}/tasks`);
   }
 
   updateTask(updatedTask: Task): Observable<Task> {
-    return this.http.put<Task>(`http://localhost:4201/tasks/${updatedTask.id}`, updatedTask);
+    return this.http.put<Task>(`${BASE_URL}/tasks/${updatedTask.id}`, updatedTask);
   }
 
   deleteTask(taskId: string): Observable<Task> {
-    return this.http.delete<Task>(`http://localhost:4201/tasks/${taskId}`);
+    return this.http.delete<Task>(`${BASE_URL}/tasks/${taskId}`);
   }
 }
