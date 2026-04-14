@@ -2,10 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Container } from '../../shared/container/container';
 import { Task } from '../../models/types';
 import { EachTask } from '../task/task';
+import { AddNewTask } from '../add-new-task/add-new-task';
 
 @Component({
   selector: 'app-each-column',
-  imports: [Container, EachTask],
+  imports: [Container, EachTask, AddNewTask],
   templateUrl: './each-column.html',
   styleUrl: './each-column.css',
 })
