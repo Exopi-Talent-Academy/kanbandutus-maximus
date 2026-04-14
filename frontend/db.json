@@ -42,18 +42,25 @@
       "description": "Description for Task 2"
     },
     {
+      "id": "3",
+      "title": "Task 3",
+      "status": "Done",
+      "assignee": "Jane Smith",
+      "description": "Description for Task 3"
+    },
+    {
       "id": "4",
       "title": "Task 4",
-      "status": "Done",
-      "assignee": "Bob Brown",
+      "status": "Plan",
+      "assignee": "Jane Smith",
       "description": "Description for Task 4"
     },
     {
       "id": "5",
       "title": "Task 5",
-      "description": "Description for Task 5",
-      "status": "To Do",
-      "assignee": "Charlie Davis"
+      "status": "In Progress",
+      "assignee": "Bob Brown",
+      "description": "Description for Task 5"
     },
     {
       "id": "6",
