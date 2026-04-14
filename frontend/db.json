@@ -30,9 +30,9 @@
     {
       "id": "1",
       "title": "Task 1",
-      "description": "Description for Task 1",
-      "status": "Plan",
-      "assignee": "John Doe"
+      "status": "To Do",
+      "assignee": "John Doe",
+      "description": "Description for Task 1"
     },
     {
       "id": "2",
@@ -65,9 +65,9 @@
     {
       "id": "6",
       "title": "Task 6",
-      "description": "Description for Task 6",
-      "status": "To Do",
-      "assignee": "Diana Evans"
+      "status": "TO DO",
+      "assignee": "Diana Evans",
+      "description": "Description for Task 6"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
