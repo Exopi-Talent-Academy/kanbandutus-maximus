@@ -21,4 +21,17 @@
         border-radius: 8px;
         color:#000;
     }  
+    .close-button {
+        position: absolute;
+        top: -24px;
+        right: -10px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;  
+        color:rgb(205, 203, 203);
+    }
+    .close-button:hover {
+        color:#6b6969
+    }
 }
