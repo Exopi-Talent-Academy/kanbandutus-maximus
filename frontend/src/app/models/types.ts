@@ -1,8 +1,8 @@
 export enum TaskType {
-  TODO = 'TO DO',
-  PLAN = 'PLAN',
-  IN_PROGRESS = 'IN PROGRESS',
-  DONE = 'DONE',
+  TODO = 'To Do',
+  PLAN = 'Plan',
+  IN_PROGRESS = 'In Progress',
+  DONE = 'Done',
 }
 
 export interface Task {

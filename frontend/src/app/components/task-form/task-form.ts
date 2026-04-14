@@ -12,6 +12,7 @@ import { Tasks } from '../../services/tasks';
 })
 export class TaskForm implements OnInit {
   @Input() currentTask!: Task;
+  @Input() addTask!: boolean;
 
   taskService = inject(Tasks);
 
@@ -25,8 +26,14 @@ export class TaskForm implements OnInit {
   }
 
   saveTask() {
-    this.taskService.updateTask(this.currentTask).subscribe(() => {
-      this.taskService.cancelEditTask();
-    });
+    if (!this.addTask) {
+      this.taskService.addTask(this.currentTask).subscribe(() => {
+        this.taskService.cancelEditTask();
+      });
+    } else {
+      this.taskService.updateTask(this.currentTask).subscribe(() => {
+        this.taskService.cancelEditTask();
+      });
+    }
   }
 }
