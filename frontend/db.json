@@ -44,9 +44,9 @@
     {
       "id": "4",
       "title": "Task 4",
-      "description": "Description for Task 4",
-      "status": "Plan",
-      "assignee": "Bob Brown"
+      "status": "Done",
+      "assignee": "Bob Brown",
+      "description": "Description for Task 4"
     },
     {
       "id": "5",
