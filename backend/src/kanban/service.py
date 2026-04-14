@@ -85,6 +85,10 @@ class KanbanService:
         if not task:
             raise NotFoundError("Task", task_id)
         return task
+    
+    def get_all_tasks(self) -> list[Task]:
+        data = self.storage.load()
+        return data.tasks
 
     def get_tasks_by_column(self, column_id: int) -> list[Task]:
         column = self.storage.get_column(column_id)

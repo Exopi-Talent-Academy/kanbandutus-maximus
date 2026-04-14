@@ -139,7 +139,10 @@ def get_tasks(column_id: int):
         return service.get_tasks_by_column(column_id)
     except NotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
-
+    
+@app.get("/api/tasks")
+def get_tasks():
+    return service.get_all_tasks()
 
 @app.post("/api/tasks")
 def create_task(task: TaskCreate):
@@ -172,3 +175,4 @@ def get_task(task_id: int):
         return service.get_task(task_id)
     except NotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    

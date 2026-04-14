@@ -25,7 +25,7 @@ export class Tasks {
   }
 
   getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>('http://localhost:4201/tasks');
+    return this.http.get<Task[]>('http://127.0.0.1:8000/api/tasks');
   }
 
   updateTask(updatedTask: Task): Observable<Task> {

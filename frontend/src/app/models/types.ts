@@ -11,4 +11,6 @@ export interface Task {
   description?: string;
   status: TaskType;
   assignee?: string;
+  column_id?: number;
+  position?: number;
 }

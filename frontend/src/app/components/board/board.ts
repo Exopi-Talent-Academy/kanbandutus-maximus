@@ -18,7 +18,7 @@ export class Board implements OnInit {
 
   ngOnInit() {
     this.taskService.getTasks().subscribe((tasks) => {
-      // console.log('Fetched tasks:', tasks);
+      console.log('Fetched tasks:', tasks);
       this.tasks.set(tasks);
     });
   }
