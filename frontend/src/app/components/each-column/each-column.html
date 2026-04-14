@@ -1,0 +1,10 @@
+<app-container>
+  <div class="each-column">
+    <p class="font-bold mb-4 text-center">{{ columnName }}</p>
+    @for (task of tasks; track task) {
+      @if (task.status === columnName) {
+        <app-each-task [task]="task"></app-each-task>
+      }
+    }
+  </div>
+</app-container>
