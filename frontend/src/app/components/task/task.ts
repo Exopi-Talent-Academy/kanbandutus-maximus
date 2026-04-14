@@ -25,11 +25,11 @@ export class EachTask implements OnInit {
 
   openTaskModal() {
     this.taskService.onEditTask({
-      id: '',
+      id: this.task.id,
       title: this.task.title,
       status: TaskType.TODO,
       assignee: this.task.assignee,
-      description: '',
+      description: this.task.description,
     });
   }
 }

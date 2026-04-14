@@ -1,11 +1,27 @@
 {
   "posts": [
-    { "id": "1", "title": "a title", "views": 100 },
-    { "id": "2", "title": "another title", "views": 200 }
+    {
+      "id": "1",
+      "title": "a title",
+      "views": 100
+    },
+    {
+      "id": "2",
+      "title": "another title",
+      "views": 200
+    }
   ],
   "comments": [
-    { "id": "1", "text": "a comment about post 1", "postId": "1" },
-    { "id": "2", "text": "another comment about post 1", "postId": "1" }
+    {
+      "id": "1",
+      "text": "a comment about post 1",
+      "postId": "1"
+    },
+    {
+      "id": "2",
+      "text": "another comment about post 1",
+      "postId": "1"
+    }
   ],
   "profile": {
     "name": "typicode"
@@ -21,30 +37,30 @@
     {
       "id": "2",
       "title": "Task 2",
-      "description": "Description for Task 2",
-      "status": "In Progress",
-      "assignee": "Jane Smith"
+      "status": "Plan",
+      "assignee": "Jane Smith",
+      "description": "Description for Task 2"
     },
     {
       "id": "3",
       "title": "Task 3",
-      "description": "Description for Task 3",
       "status": "Done",
-      "assignee": "Alice Johnson"
+      "assignee": "Jane Smith",
+      "description": "Description for Task 3"
     },
     {
       "id": "4",
       "title": "Task 4",
-      "description": "Description for Task 4",
       "status": "Plan",
-      "assignee": "Bob Brown"
+      "assignee": "Jane Smith",
+      "description": "Description for Task 4"
     },
     {
       "id": "5",
       "title": "Task 5",
-      "description": "Description for Task 5",
-      "status": "To Do",
-      "assignee": "Charlie Davis"
+      "status": "In Progress",
+      "assignee": "Bob Brown",
+      "description": "Description for Task 5"
     },
     {
       "id": "6",
@@ -53,5 +69,6 @@
       "status": "To Do",
       "assignee": "Diana Evans"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

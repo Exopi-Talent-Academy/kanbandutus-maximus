@@ -1,0 +1,53 @@
+<app-container>
+  <div class="task-form relative flex flex-col gap-2">
+    <div class="flex gap-4">
+      <label class="id font-bold"
+        >ID:
+        <input class="font-normal" type="text" placeholder="Task ID" [(ngModel)]="currentTask.id" />
+      </label>
+      <label class="title font-bold"
+        >Title:
+        <input
+          class="font-normal"
+          type="text"
+          placeholder="Task Title"
+          [(ngModel)]="currentTask.title"
+        />
+      </label>
+    </div>
+    <label class="description font-bold"
+      >Description:
+      <input
+        class="font-normal"
+        type="text"
+        placeholder="Task Description"
+        [(ngModel)]="currentTask.description"
+      />
+    </label>
+    <div class="flex gap-4">
+      <label class="assignee font-bold"
+        >Assignee:
+        <input
+          class="font-normal"
+          type="text"
+          placeholder="Task Assignee"
+          [(ngModel)]="currentTask.assignee"
+        />
+      </label>
+      <label class="status font-bold"
+        >Status:
+        <input
+          class="font-normal"
+          type="text"
+          placeholder="Task Status"
+          [(ngModel)]="currentTask.status"
+        />
+      </label>
+    </div>
+  </div>
+  <div class="flex justify-between mt-4">
+    <button class="bg-gray-200 p-2" (click)="saveTask()">Save</button>
+    <button (click)="taskService.cancelEditTask()">Cancel</button>
+    <button (click)="deleteTask()">Delete</button>
+  </div>
+</app-container>
