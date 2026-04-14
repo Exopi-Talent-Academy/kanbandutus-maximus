@@ -1,0 +1,19 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px 0;
+
+    background-color: rgb(247, 248, 248);
+    box-shadow: 0 2px 4px rgba(244, 242, 242, 0.1);
+    border-radius: 12px;
+
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 0;
+    }
+}

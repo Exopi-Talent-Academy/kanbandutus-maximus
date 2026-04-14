@@ -1,0 +1,14 @@
+<app-container>
+  <app-nav-bar></app-nav-bar>
+  <app-header></app-header>
+  <app-board></app-board>
+</app-container>
+
+@if (isEditable()) {
+  <div class="shadow">
+    <div class="modal">
+      <h2>Edit Task</h2>
+      <button class="cursor-pointer" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </div>
+}
