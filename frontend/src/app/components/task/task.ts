@@ -27,7 +27,7 @@ export class EachTask implements OnInit {
     this.taskService.onEditTask({
       id: this.task.id,
       title: this.task.title,
-      status: TaskType.TODO,
+      status: this.task.status,
       assignee: this.task.assignee,
       description: this.task.description,
     });
