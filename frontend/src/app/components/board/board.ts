@@ -17,8 +17,18 @@ export class Board implements OnInit {
   taskService = inject(Tasks);
 
   ngOnInit() {
+    this.loadTasks();
+    this.taskService.updateAvailable.subscribe(() => {
+      this.tasks.set([]); // Clear current tasks before reloading
+      console.log('Update available, reloading tasks...');
+      setTimeout(() => {
+        this.loadTasks();
+      }, 100); // Add a slight delay to ensure the backend has processed the update
+    });
+  }
+
+  loadTasks() {
     this.taskService.getTasks().subscribe((tasks) => {
-      // console.log('Fetched tasks:', tasks);
       this.tasks.set(tasks);
     });
   }

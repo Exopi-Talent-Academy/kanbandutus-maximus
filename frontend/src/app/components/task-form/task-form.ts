@@ -12,7 +12,7 @@ import { Tasks } from '../../services/tasks';
 })
 export class TaskForm implements OnInit {
   @Input() currentTask!: Task;
-  @Input() addTask!: boolean;
+  @Input() addTask: boolean = false;
 
   taskService = inject(Tasks);
 
@@ -26,7 +26,7 @@ export class TaskForm implements OnInit {
   }
 
   saveTask() {
-    if (!this.addTask) {
+    if (this.addTask) {
       this.taskService.addTask(this.currentTask).subscribe(() => {
         this.taskService.cancelEditTask();
       });

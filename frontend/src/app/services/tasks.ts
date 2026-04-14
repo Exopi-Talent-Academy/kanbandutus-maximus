@@ -12,6 +12,8 @@ const BASE_URL = 'http://localhost:4201';
 export class Tasks {
   constructor(private http: HttpClient) {}
 
+  updateAvailable = new Subject<boolean>();
+
   private tasks: Task[] = [];
 
   editTask = new Subject<Task | null>();
@@ -24,6 +26,7 @@ export class Tasks {
   }
 
   addTask(task: Task): Observable<Task> {
+    this.updateAvailable.next(true);
     return this.http.post<Task>(`${BASE_URL}/tasks`, task);
   }
 
@@ -32,10 +35,19 @@ export class Tasks {
   }
 
   updateTask(updatedTask: Task): Observable<Task> {
+    this.updateAvailable.next(true);
     return this.http.put<Task>(`${BASE_URL}/tasks/${updatedTask.id}`, updatedTask);
   }
 
   deleteTask(taskId: string): Observable<Task> {
+    this.updateAvailable.next(true);
     return this.http.delete<Task>(`${BASE_URL}/tasks/${taskId}`);
+  }
+
+  showUpdateNotification() {
+    this.updateAvailable.next(true);
+    setTimeout(() => {
+      this.updateAvailable.next(false);
+    }, 3000);
   }
 }
