@@ -28,6 +28,7 @@ export class EachTask implements OnInit {
       column_id: this.task.column_id,
       assignee: this.task.assignee,
       description: this.task.description,
+      position: this.task.position,
     });
   }
   onDragEnd(event: DragEvent) {

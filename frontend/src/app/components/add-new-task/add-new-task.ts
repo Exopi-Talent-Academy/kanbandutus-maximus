@@ -21,6 +21,7 @@ export class AddNewTask {
       column_id: 0,
       assignee: '',
       description: '',
+      position: 0,
     });
     this.taskService.togggleAddTaskMode(true);
   }

@@ -23,7 +23,7 @@ export class EachColumn implements OnInit {
     for (const task of this.tasks) {
       console.log(
         'Task in EachColumn component:',
-        task.column_id,
+        task.position,
         'with column name:',
         this.columnName,
       );
@@ -39,7 +39,7 @@ export class EachColumn implements OnInit {
         this.taskService
           .updateTask({
             ...movedTask,
-            column_id: this.columnName as unknown as number,
+            position: this.columnName as unknown as number,
           })
           .subscribe(() => {
             this.taskService.onMoveTaskComplete();
