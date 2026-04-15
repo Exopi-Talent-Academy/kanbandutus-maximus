@@ -8,14 +8,19 @@ import { Tasks } from './services/tasks';
 import { Task } from './models/types';
 import { TaskForm } from './components/task-form/task-form';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-root',
-  imports: [Container, Header, NavBar, Board, TaskForm],
+  imports: [Container, Header, NavBar, Board, TaskForm, FontAwesomeModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App implements OnInit {
   protected readonly title = signal('kanban');
+
+  faClose = faClose;
 
   task = signal<Task>({
     id: '',

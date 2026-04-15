@@ -23,11 +23,11 @@
     }  
     .close-button {
         position: absolute;
-        top: -24px;
+        top: -16px;
         right: -10px;
         background: none;
         border: none;
-        font-size: 24px;
+        font-size: 16px;
         cursor: pointer;  
         color:rgb(205, 203, 203);
     }
