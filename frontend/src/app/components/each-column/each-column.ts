@@ -14,7 +14,7 @@ import { columnNames } from '../../models/types';
 })
 export class EachColumn implements OnInit {
   @Input() tasks: Task[] = [];
-  @Input() columnName!: number;
+  @Input() columnName!: string;
 
   taskService = inject(Tasks);
 
@@ -53,9 +53,5 @@ export class EachColumn implements OnInit {
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
-  }
-
-  getColumnNames() {
-    return columnNames[this.columnName as keyof typeof columnNames];
   }
 }

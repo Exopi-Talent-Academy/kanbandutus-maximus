@@ -49,6 +49,10 @@ export class Tasks {
     return this.http.get<Task[]>(`${BASE_URL}/tasks`);
   }
 
+  getBoards(): Observable<any> {
+    return this.http.get(`${BASE_URL}/boards`);
+  }
+
   updateTask(updatedTask: Task): Observable<Task> {
     this.updateAvailable.next(true);
     return this.http.put<Task>(`${BASE_URL}/tasks/${updatedTask.id}`, updatedTask);

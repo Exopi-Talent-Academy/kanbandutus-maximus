@@ -36,14 +36,6 @@
       "position": 0
     },
     {
-      "id": "2",
-      "title": "Task 2",
-      "column_id": 3,
-      "assignee": "Jane Smith",
-      "description": "Description for Task 2",
-      "position": 3
-    },
-    {
       "id": "3",
       "title": "Task 3",
       "column_id": 3,
@@ -53,10 +45,6 @@
     },
     {
       "id": "4",
-      "title": "Task 4",
-      "column_id": 2,
-      "assignee": "Jane Smith",
-      "description": "Description for Task 4",
       "position": 2
     },
     {
@@ -108,7 +96,7 @@
               "title": "Welcome Task",
               "column_id": 1,
               "description": "Drag me to move",
-              "assignee": "",
+              "assignee": "dsada sda",
               "position": 0
             }
           ]
@@ -142,17 +130,17 @@
             {
               "id": 2,
               "title": "Welcome to the Parade",
-              "column_id": 4,
+              "column_id": 1,
               "description": "Drag me to move",
-              "assignee": "Lenny",
+              "assignee": "Lenny dsadas",
               "position": 0
             },
             {
               "id": 3,
               "title": "And another one",
-              "column_id": 4,
+              "column_id": 1,
               "description": "... bites the dust!",
-              "assignee": "Wolf",
+              "assignee": "Wolf dsdsa",
               "position": 1
             }
           ]
@@ -168,7 +156,7 @@
               "title": "Become famous",
               "column_id": 5,
               "description": "Through the fanciest of music",
-              "assignee": "Hayden",
+              "assignee": "Hayden ddd",
               "position": 0
             },
             {
@@ -176,7 +164,7 @@
               "title": "Ein Klein Natchmusik",
               "column_id": 5,
               "description": "Legendary track, innit?",
-              "assignee": "Mozart",
+              "assignee": "Mozart ssss",
               "position": 1
             },
             {
@@ -184,7 +172,7 @@
               "title": "Symphony Nr. 7",
               "column_id": 5,
               "description": "Very dramatic.",
-              "assignee": "Beethoven",
+              "assignee": "Beethoven ssss",
               "position": 2
             }
           ]
@@ -200,7 +188,7 @@
               "title": "Spanish Suite",
               "column_id": 6,
               "description": "Nice guitar.",
-              "assignee": "Rodrigo",
+              "assignee": "Rodrigo ssss",
               "position": 0
             }
           ]
