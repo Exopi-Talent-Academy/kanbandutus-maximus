@@ -32,8 +32,7 @@ export class EachTask implements OnInit {
       description: this.task.description,
     });
   }
-  onDragStart() {
-    console.log('Drag started for task:', this.task.title);
-    // this.taskService.onTaskMove(this.task);
+  onDragEnd(event: DragEvent) {
+    this.taskService.onTaskMove(this.task);
   }
 }

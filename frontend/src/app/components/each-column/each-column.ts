@@ -29,22 +29,28 @@ export class EachColumn implements OnInit {
     }
   }
 
-  onDragdrop() {
-    console.log('Drag ended on column:', this.columnName);
-    // this.taskService.moveTask.subscribe((movedTask) => {
-    //   if (movedTask) {
-    //     this.taskService
-    //       .updateTask({
-    //         ...movedTask,
-    //         status: this.columnName as Task['status'],
-    //       })
-    //       .subscribe(() => {
-    //         this.taskService.onMoveTaskComplete();
-    //         console.log('Task moved successfully:', movedTask);
-    //       });
-    //   }
-    // });
+  onDragDrop(event: DragEvent) {
+    event.preventDefault();
+
+    console.log('Drag dropped on column:', this.columnName);
+    this.taskService.moveTask.subscribe((movedTask) => {
+      if (movedTask) {
+        this.taskService
+          .updateTask({
+            ...movedTask,
+            status: this.columnName as Task['status'],
+          })
+          .subscribe(() => {
+            this.taskService.onMoveTaskComplete();
+            console.log('Task moved successfully:', movedTask);
+          });
+      }
+    });
 
     this.taskService.onMoveTaskComplete();
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
   }
 }

@@ -1,7 +1,7 @@
 <div
   class="task cursor-pointer hover:bg-gray-400"
   draggable="true"
-  (dragstart)="onDragStart()"
+  (dragend)="onDragEnd($event)"
   (click)="openTaskModal()"
 >
   <p>{{ task.title }}</p>
