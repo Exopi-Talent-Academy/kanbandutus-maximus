@@ -68,6 +68,13 @@
       "status": "In Progress",
       "assignee": "Diana Evans",
       "description": "Description for Task 6"
+    },
+    {
+      "id": "3RYmr1T9jZg",
+      "title": "Title 7",
+      "status": "To Do",
+      "assignee": "Som Poudel",
+      "description": "Description for title 7"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

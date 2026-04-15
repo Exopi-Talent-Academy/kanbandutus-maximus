@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Task } from '../models/types';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 // const BASE_URL = 'http://localhost:8000/api';
@@ -16,6 +16,9 @@ export class Tasks {
 
   moveTask = new Subject<Task | null>();
 
+  editTask = new Subject<Task | null>();
+  addTaskMode = new BehaviorSubject<boolean>(false);
+
   onTaskMove(task: Task): void {
     this.moveTask.next(task);
   }
@@ -26,7 +29,9 @@ export class Tasks {
 
   private tasks: Task[] = [];
 
-  editTask = new Subject<Task | null>();
+  togggleAddTaskMode(isAdd: boolean): void {
+    this.addTaskMode.next(isAdd);
+  }
 
   onEditTask(task: Task): void {
     this.editTask.next(task);

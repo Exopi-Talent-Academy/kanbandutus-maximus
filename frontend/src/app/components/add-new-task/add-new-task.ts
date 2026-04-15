@@ -20,5 +20,6 @@ export class AddNewTask {
       assignee: '',
       description: '',
     });
+    this.taskService.togggleAddTaskMode(true);
   }
 }
