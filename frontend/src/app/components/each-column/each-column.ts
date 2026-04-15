@@ -4,6 +4,7 @@ import { Task } from '../../models/types';
 import { EachTask } from '../task/task';
 import { AddNewTask } from '../add-new-task/add-new-task';
 import { Tasks } from '../../services/tasks';
+import { columnNames } from '../../models/types';
 
 @Component({
   selector: 'app-each-column',
@@ -13,7 +14,7 @@ import { Tasks } from '../../services/tasks';
 })
 export class EachColumn implements OnInit {
   @Input() tasks: Task[] = [];
-  @Input() columnName!: string;
+  @Input() columnName!: number;
 
   taskService = inject(Tasks);
 
@@ -22,7 +23,7 @@ export class EachColumn implements OnInit {
     for (const task of this.tasks) {
       console.log(
         'Task in EachColumn component:',
-        task.status,
+        task.column_id,
         'with column name:',
         this.columnName,
       );
@@ -38,7 +39,7 @@ export class EachColumn implements OnInit {
         this.taskService
           .updateTask({
             ...movedTask,
-            status: this.columnName as Task['status'],
+            column_id: this.columnName as unknown as number,
           })
           .subscribe(() => {
             this.taskService.onMoveTaskComplete();
@@ -52,5 +53,9 @@ export class EachColumn implements OnInit {
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
+  }
+
+  getColumnNames() {
+    return columnNames[this.columnName as keyof typeof columnNames];
   }
 }

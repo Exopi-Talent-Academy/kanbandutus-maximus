@@ -30,51 +30,58 @@
     {
       "id": "1",
       "title": "Task 1",
-      "status": "Done",
+      "column_id": 3,
       "assignee": "John Doe",
       "description": "Description for Task 1"
     },
     {
       "id": "2",
       "title": "Task 2",
-      "status": "Plan",
+      "column_id": 3,
       "assignee": "Jane Smith",
       "description": "Description for Task 2"
     },
     {
       "id": "3",
       "title": "Task 3",
-      "status": "In Progress",
+      "column_id": 3,
       "assignee": "Jane Smith",
       "description": "Description for Task 3"
     },
     {
       "id": "4",
       "title": "Task 4",
-      "status": "In Progress",
+      "column_id": 2,
       "assignee": "Jane Smith",
       "description": "Description for Task 4"
     },
     {
       "id": "5",
       "title": "Task 5",
-      "status": "Plan",
+      "column_id": 3,
       "assignee": "Bob Brown",
       "description": "Description for Task 51"
     },
     {
       "id": "6",
       "title": "Task 6",
-      "status": "In Progress",
+      "column_id": 3,
       "assignee": "Diana Evans",
       "description": "Description for Task 6"
     },
     {
       "id": "3RYmr1T9jZg",
       "title": "Title 7",
-      "status": "To Do",
+      "column_id": 0,
       "assignee": "Som Poudel",
       "description": "Description for title 7"
+    },
+    {
+      "id": "J0A80xVcqVo",
+      "title": "vcbvcb",
+      "column_id": 1,
+      "assignee": "vcbvcb fgfdgd",
+      "description": "vbvcbvc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

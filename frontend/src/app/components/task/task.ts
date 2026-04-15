@@ -1,7 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { Container } from '../../shared/container/container';
 import { Tasks } from '../../services/tasks';
-import { TaskType } from '../../models/types';
 import { Task } from '../../models/types';
 
 @Component({
@@ -27,7 +25,7 @@ export class EachTask implements OnInit {
     this.taskService.onEditTask({
       id: this.task.id,
       title: this.task.title,
-      status: this.task.status,
+      column_id: this.task.column_id,
       assignee: this.task.assignee,
       description: this.task.description,
     });

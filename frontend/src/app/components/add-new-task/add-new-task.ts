@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Container } from '../../shared/container/container';
 import { Tasks } from '../../services/tasks';
-import { TaskType } from '../../models/types';
 
 @Component({
   selector: 'app-add-new-task',
@@ -16,7 +15,7 @@ export class AddNewTask {
     this.taskService.onEditTask({
       id: '',
       title: '',
-      status: TaskType.TODO,
+      column_id: 0,
       assignee: '',
       description: '',
     });

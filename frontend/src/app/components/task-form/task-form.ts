@@ -1,7 +1,7 @@
 import { Component, inject, input, Input, OnInit, signal } from '@angular/core';
 import { Container } from '../../shared/container/container';
 import { FormsModule } from '@angular/forms';
-import { Task, TaskType } from '../../models/types';
+import { Task } from '../../models/types';
 import { Tasks } from '../../services/tasks';
 
 @Component({

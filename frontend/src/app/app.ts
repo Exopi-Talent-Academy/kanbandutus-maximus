@@ -5,7 +5,7 @@ import { Header } from './components/header/header';
 import { NavBar } from './components/nav-bar/nav-bar';
 import { Board } from './components/board/board';
 import { Tasks } from './services/tasks';
-import { Task, TaskType } from './models/types';
+import { Task } from './models/types';
 import { TaskForm } from './components/task-form/task-form';
 
 @Component({
@@ -20,7 +20,7 @@ export class App implements OnInit {
   task = signal<Task>({
     id: '',
     title: '',
-    status: TaskType.TODO,
+    column_id: 0,
     assignee: '',
   });
 
@@ -39,7 +39,7 @@ export class App implements OnInit {
         this.task.set({
           id: '',
           title: '',
-          status: TaskType.TODO,
+          column_id: 0,
           assignee: '',
         });
       }

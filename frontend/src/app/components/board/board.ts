@@ -12,7 +12,7 @@ import { Tasks } from '../../services/tasks';
   styleUrl: './board.css',
 })
 export class Board implements OnInit {
-  board = ['To Do', 'Plan', 'In Progress', 'Done'];
+  board = [0, 1, 2, 3];
   tasks = signal<Task[]>([]);
   taskService = inject(Tasks);
 
