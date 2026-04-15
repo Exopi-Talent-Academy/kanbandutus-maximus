@@ -63,12 +63,14 @@ async def not_found_handler(request, exc: NotFoundError):
                  "status": 404,
                  "detail": str(exc)}
     )
+    
+    
+##### BOARDS #####
 
-
+# Gets the board for display
 @app.get("/api/boards")
 def get_boards():
     return service.get_all_boards()
-
 
 @app.get("/api/boards/{board_id}")
 def get_board(board_id: int):
@@ -77,73 +79,81 @@ def get_board(board_id: int):
     except NotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+## Creates a board
+# @app.post("/api/boards")
+# def create_board(board: BoardCreate):
+#     return service.create_board(board.name)
 
-@app.post("/api/boards")
-def create_board(board: BoardCreate):
-    return service.create_board(board.name)
+## Updates board, for example, changing the the board title.
+# @app.put("/api/boards/{board_id}")
+# def update_board(board_id: int, board: BoardUpdate):
+#     try:
+#         return service.update_board(board_id, board.name)
+#     except NotFoundError as e:
+#         raise HTTPException(status_code=404, detail=str(e))
 
-
-@app.put("/api/boards/{board_id}")
-def update_board(board_id: int, board: BoardUpdate):
-    try:
-        return service.update_board(board_id, board.name)
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-
-
-@app.delete("/api/boards/{board_id}")
-def delete_board(board_id: int):
-    try:
-        service.delete_board(board_id)
-        return {"message": "Board deleted"}
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-
-
-@app.get("/api/boards/{board_id}/columns")
-def get_columns(board_id: int):
-    try:
-        return service.get_columns_by_board(board_id)
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+## Deletes board.
+# @app.delete("/api/boards/{board_id}")
+# def delete_board(board_id: int):
+#     try:
+#         service.delete_board(board_id)
+#         return {"message": "Board deleted"}
+#     except NotFoundError as e:
+#         raise HTTPException(status_code=404, detail=str(e))
 
 
-@app.post("/api/columns")
-def create_column(column: ColumnCreate):
-    try:
-        return service.create_column(column.name, column.position, column.board_id)
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+## Get Columns. We probably shouldn't use this (use Get Board instead)
+# @app.get("/api/boards/{board_id}/columns")
+# def get_columns(board_id: int):
+#     try:
+#         return service.get_columns_by_board(board_id)
+#     except NotFoundError as e:
+#         raise HTTPException(status_code=404, detail=str(e))
 
 
-@app.put("/api/columns/{column_id}")
-def update_column(column_id: int, column: ColumnUpdate):
-    try:
-        return service.update_column(column_id, column.name, column.position)
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
 
 
-@app.delete("/api/columns/{column_id}")
-def delete_column(column_id: int):
-    try:
-        service.delete_column(column_id)
-        return {"message": "Column deleted"}
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+##### COLUMNS #####
+
+## Create new Column.
+# @app.post("/api/columns")
+# def create_column(column: ColumnCreate):
+#     try:
+#         return service.create_column(column.name, column.position, column.board_id)
+#     except NotFoundError as e:
+#         raise HTTPException(status_code=404, detail=str(e))
+
+## Updates Column data (such as name, position)
+# @app.put("/api/columns/{column_id}")
+# def update_column(column_id: int, column: ColumnUpdate):
+#     try:
+#         return service.update_column(column_id, column.name, column.position)
+#     except NotFoundError as e:
+#         raise HTTPException(status_code=404, detail=str(e))
+
+## Deletes a Column.  
+# @app.delete("/api/columns/{column_id}")
+# def delete_column(column_id: int):
+#     try:
+#         service.delete_column(column_id)
+#         return {"message": "Column deleted"}
+#     except NotFoundError as e:
+#         raise HTTPException(status_code=404, detail=str(e))
 
 
-@app.get("/api/columns/{column_id}/tasks")
-def get_tasks(column_id: int):
-    try:
-        return service.get_tasks_by_column(column_id)
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    
-@app.get("/api/tasks")
-def get_tasks():
-    return service.get_all_tasks()
 
+
+##### TASKS #####
+
+## Get task. We probably shouldn't use this (use Get Board instead).
+# @app.get("/api/columns/{column_id}/tasks")
+# def get_tasks(column_id: int):
+#     try:
+#         return service.get_tasks_by_column(column_id)
+#     except NotFoundError as e:
+#         raise HTTPException(status_code=404, detail=str(e))
+
+## Creates new Task.
 @app.post("/api/tasks")
 def create_task(task: TaskCreate):
     try:
@@ -151,7 +161,7 @@ def create_task(task: TaskCreate):
     except NotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-
+## Updates a task.
 @app.put("/api/tasks/{task_id}")
 def update_task(task_id: int, task: TaskUpdate):
     try:
@@ -159,20 +169,19 @@ def update_task(task_id: int, task: TaskUpdate):
     except NotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+## Deletes a task.
+# @app.delete("/api/tasks/{task_id}")
+# def delete_task(task_id: int):
+#     try:
+#         service.delete_task(task_id)
+#         return {"message": "Task deleted"}
+#     except NotFoundError as e:
+#         raise HTTPException(status_code=404, detail=str(e))
 
-@app.delete("/api/tasks/{task_id}")
-def delete_task(task_id: int):
-    try:
-        service.delete_task(task_id)
-        return {"message": "Task deleted"}
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-
-
-@app.get("/api/tasks/{task_id}")
-def get_task(task_id: int):
-    try:
-        return service.get_task(task_id)
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    
+## Gets a task. Probably don't use this, use Get Board instead.
+# @app.get("/api/tasks/{task_id}")
+# def get_task(task_id: int):
+#     try:
+#         return service.get_task(task_id)
+#     except NotFoundError as e:
+#         raise HTTPException(status_code=404, detail=str(e))
