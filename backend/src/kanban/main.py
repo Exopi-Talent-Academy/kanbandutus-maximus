@@ -152,12 +152,12 @@ def get_board(board_id: int):
 ##### TASKS #####
 
 ## Get task. We probably shouldn't use this (use Get Board instead).
-# @app.get("/api/columns/{column_id}/tasks")
-# def get_tasks(column_id: int):
-#     try:
-#         return service.get_tasks_by_column(column_id)
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+@app.get("/api/columns/{column_id}/tasks")
+def get_tasks(column_id: int):
+    try:
+        return service.get_tasks_by_column(column_id)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 ## Creates new Task.
 @app.post("/api/tasks")
