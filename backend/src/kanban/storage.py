@@ -3,7 +3,12 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Optional
 
+from sqlalchemy import delete, select
+from sqlalchemy.orm import selectinload
+
+from .db import SessionLocal, init_db
 from .models import Board, Column, KanbanData, Task
+from .orm_models import BoardORM, ColumnORM, TaskORM
 
 
 class StorageInterface(ABC):
@@ -303,3 +308,303 @@ class JsonStorage(StorageInterface):
         data.tasks = [t for t in data.tasks if t.id != task_id]
         self.save(data)
         return True
+
+
+class SqlAlchemyStorage(StorageInterface):
+    def __init__(self):
+        init_db()
+
+    def _to_domain_board(self, board: BoardORM) -> Board:
+        domain_columns: list[Column] = []
+        for column in sorted(board.columns, key=lambda c: c.position):
+            domain_tasks = [
+                Task(
+                    id=task.id,
+                    title=task.title,
+                    column_id=task.column_id,
+                    description=task.description,
+                    assignee=task.assignee,
+                    position=task.position,
+                )
+                for task in sorted(column.tasks, key=lambda t: t.position)
+            ]
+            domain_columns.append(
+                Column(
+                    id=column.id,
+                    name=column.name,
+                    position=column.position,
+                    board_id=column.board_id,
+                    tasks=domain_tasks,
+                )
+            )
+
+        return Board(id=board.id, name=board.name, columns=domain_columns)
+
+    def _to_kanban_data(self, boards: list[BoardORM]) -> KanbanData:
+        domain_boards = [self._to_domain_board(board) for board in boards]
+        domain_columns = [column for board in domain_boards for column in board.columns]
+        domain_tasks = [task for column in domain_columns for task in column.tasks]
+        return KanbanData(boards=domain_boards, columns=domain_columns, tasks=domain_tasks)
+
+    def _flatten_columns_tasks(self, data: KanbanData) -> tuple[list[Column], list[Task]]:
+        if data.columns:
+            columns = data.columns
+        else:
+            columns = [column for board in data.boards for column in board.columns]
+
+        if data.tasks:
+            tasks = data.tasks
+        else:
+            tasks = [task for column in columns for task in column.tasks]
+
+        return columns, tasks
+
+    def load(self) -> KanbanData:
+        with SessionLocal() as session:
+            boards = (
+                session.execute(
+                    select(BoardORM)
+                    .options(selectinload(BoardORM.columns).selectinload(ColumnORM.tasks))
+                    .order_by(BoardORM.id)
+                )
+                .scalars()
+                .unique()
+                .all()
+            )
+            return self._to_kanban_data(boards)
+
+    def save(self, data: KanbanData) -> None:
+        columns, tasks = self._flatten_columns_tasks(data)
+
+        with SessionLocal() as session:
+            with session.begin():
+                session.execute(delete(TaskORM))
+                session.execute(delete(ColumnORM))
+                session.execute(delete(BoardORM))
+
+                session.add_all([BoardORM(id=board.id, name=board.name) for board in data.boards])
+                session.add_all(
+                    [
+                        ColumnORM(
+                            id=column.id,
+                            name=column.name,
+                            position=column.position,
+                            board_id=column.board_id,
+                        )
+                        for column in columns
+                    ]
+                )
+                session.add_all(
+                    [
+                        TaskORM(
+                            id=task.id,
+                            title=task.title,
+                            description=task.description,
+                            assignee=task.assignee,
+                            position=task.position,
+                            column_id=task.column_id,
+                        )
+                        for task in tasks
+                    ]
+                )
+
+    def get_board(self, board_id: int) -> Optional[Board]:
+        with SessionLocal() as session:
+            board = (
+                session.execute(
+                    select(BoardORM)
+                    .where(BoardORM.id == board_id)
+                    .options(selectinload(BoardORM.columns).selectinload(ColumnORM.tasks))
+                )
+                .scalars()
+                .unique()
+                .first()
+            )
+            return self._to_domain_board(board) if board else None
+
+    def create_board(self, name: str) -> Board:
+        with SessionLocal() as session:
+            with session.begin():
+                max_id = session.scalar(select(BoardORM.id).order_by(BoardORM.id.desc()).limit(1)) or 0
+                board = BoardORM(id=max_id + 1, name=name)
+                session.add(board)
+            return Board(id=board.id, name=board.name, columns=[])
+
+    def update_board(self, board_id: int, name: str) -> Optional[Board]:
+        with SessionLocal() as session:
+            with session.begin():
+                board = session.get(BoardORM, board_id)
+                if not board:
+                    return None
+                board.name = name
+
+            board = (
+                session.execute(
+                    select(BoardORM)
+                    .where(BoardORM.id == board_id)
+                    .options(selectinload(BoardORM.columns).selectinload(ColumnORM.tasks))
+                )
+                .scalars()
+                .unique()
+                .first()
+            )
+            return self._to_domain_board(board) if board else None
+
+    def delete_board(self, board_id: int) -> bool:
+        with SessionLocal() as session:
+            with session.begin():
+                board = session.get(BoardORM, board_id)
+                if not board:
+                    return False
+                session.delete(board)
+                return True
+
+    def get_column(self, column_id: int) -> Optional[Column]:
+        with SessionLocal() as session:
+            column = (
+                session.execute(
+                    select(ColumnORM).where(ColumnORM.id == column_id).options(selectinload(ColumnORM.tasks))
+                )
+                .scalars()
+                .unique()
+                .first()
+            )
+            if not column:
+                return None
+            return Column(
+                id=column.id,
+                name=column.name,
+                position=column.position,
+                board_id=column.board_id,
+                tasks=[
+                    Task(
+                        id=task.id,
+                        title=task.title,
+                        column_id=task.column_id,
+                        description=task.description,
+                        assignee=task.assignee,
+                        position=task.position,
+                    )
+                    for task in sorted(column.tasks, key=lambda t: t.position)
+                ],
+            )
+
+    def create_column(self, name: str, position: int, board_id: int) -> Optional[Column]:
+        with SessionLocal() as session:
+            with session.begin():
+                board = session.get(BoardORM, board_id)
+                if not board:
+                    return None
+                max_id = session.scalar(select(ColumnORM.id).order_by(ColumnORM.id.desc()).limit(1)) or 0
+                column = ColumnORM(id=max_id + 1, name=name, position=position, board_id=board_id)
+                session.add(column)
+            return Column(id=column.id, name=column.name, position=column.position, board_id=column.board_id, tasks=[])
+
+    def update_column(self, column_id: int, name: str, position: int) -> Optional[Column]:
+        with SessionLocal() as session:
+            with session.begin():
+                column = session.get(ColumnORM, column_id)
+                if not column:
+                    return None
+                column.name = name
+                column.position = position
+                board_id = column.board_id
+
+            refreshed = (
+                session.execute(select(ColumnORM).where(ColumnORM.id == column_id).options(selectinload(ColumnORM.tasks)))
+                .scalars()
+                .unique()
+                .first()
+            )
+            if not refreshed:
+                return None
+            return Column(id=refreshed.id, name=refreshed.name, position=refreshed.position, board_id=board_id, tasks=[
+                Task(
+                    id=task.id,
+                    title=task.title,
+                    column_id=task.column_id,
+                    description=task.description,
+                    assignee=task.assignee,
+                    position=task.position,
+                )
+                for task in sorted(refreshed.tasks, key=lambda t: t.position)
+            ])
+
+    def delete_column(self, column_id: int) -> bool:
+        with SessionLocal() as session:
+            with session.begin():
+                column = session.get(ColumnORM, column_id)
+                if not column:
+                    return False
+                session.delete(column)
+                return True
+
+    def get_task(self, task_id: int) -> Optional[Task]:
+        with SessionLocal() as session:
+            task = session.get(TaskORM, task_id)
+            if not task:
+                return None
+            return Task(
+                id=task.id,
+                title=task.title,
+                column_id=task.column_id,
+                description=task.description,
+                assignee=task.assignee,
+                position=task.position,
+            )
+
+    def create_task(self, title: str, description: str, column_id: int, position: int) -> Optional[Task]:
+        with SessionLocal() as session:
+            with session.begin():
+                column = session.get(ColumnORM, column_id)
+                if not column:
+                    return None
+                max_id = session.scalar(select(TaskORM.id).order_by(TaskORM.id.desc()).limit(1)) or 0
+                task = TaskORM(
+                    id=max_id + 1,
+                    title=title,
+                    description=description,
+                    assignee="",
+                    column_id=column_id,
+                    position=position,
+                )
+                session.add(task)
+            return Task(
+                id=task.id,
+                title=task.title,
+                column_id=task.column_id,
+                description=task.description,
+                assignee=task.assignee,
+                position=task.position,
+            )
+
+    def update_task(self, task_id: int, title: str, description: str, column_id: int, position: int) -> Optional[Task]:
+        with SessionLocal() as session:
+            with session.begin():
+                task = session.get(TaskORM, task_id)
+                if not task:
+                    return None
+                target_column = session.get(ColumnORM, column_id)
+                if not target_column:
+                    return None
+                task.title = title
+                task.description = description
+                task.column_id = column_id
+                task.position = position
+            return Task(
+                id=task.id,
+                title=task.title,
+                column_id=task.column_id,
+                description=task.description,
+                assignee=task.assignee,
+                position=task.position,
+            )
+
+    def delete_task(self, task_id: int) -> bool:
+        with SessionLocal() as session:
+            with session.begin():
+                task = session.get(TaskORM, task_id)
+                if not task:
+                    return False
+                session.delete(task)
+                return True

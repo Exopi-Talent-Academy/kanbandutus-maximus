@@ -1,15 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from .config import get_data_file
+from .config import get_data_file, get_storage_backend
 from .frontend import AngularMock, FrontendInterface
 from .service import KanbanService, NotFoundError
-from .storage import JsonStorage, StorageInterface
+from .storage import JsonStorage, SqlAlchemyStorage, StorageInterface
 
 app = FastAPI(title="Kanban API")
 
 
 def get_storage() -> StorageInterface:
+    if get_storage_backend() == "sqlite":
+        return SqlAlchemyStorage()
     return JsonStorage(get_data_file())
 
 
@@ -20,47 +22,8 @@ def get_frontend() -> FrontendInterface:
 service = KanbanService(get_storage())
 
 
-def _serialize_task(task) -> dict:
-    return {
-        "id": task.id,
-        "title": task.title,
-        "description": task.description,
-        "assignee": task.assignee,
-        "column_id": task.column_id,
-        "position": task.position,
-    }
-
-
-def _serialize_column(column, tasks_by_column: dict[int, list]) -> dict:
-    return {
-        "id": column.id,
-        "name": column.name,
-        "position": column.position,
-        "board_id": column.board_id,
-        "tasks": [_serialize_task(task) for task in tasks_by_column.get(column.id, [])],
-    }
-
-
-def _serialize_board(board_id: int) -> dict:
-    data = service.storage.load()
-    board = data.get_board(board_id)
-    if not board:
-        raise NotFoundError("Board", board_id)
-
-    columns = sorted(
-        [column for column in data.columns if column.board_id == board.id],
-        key=lambda column: column.position,
-    )
-
-    tasks_by_column: dict[int, list] = {}
-    for task in sorted(data.tasks, key=lambda task: task.position):
-        tasks_by_column.setdefault(task.column_id, []).append(task)
-
-    return {
-        "id": board.id,
-        "name": board.name,
-        "columns": [_serialize_column(column, tasks_by_column) for column in columns],
-    }
+# Manual serializer helpers are no longer needed for board responses;
+# FastAPI can encode nested dataclasses directly from service objects.
 
 
 class BoardCreate(BaseModel):
@@ -113,13 +76,12 @@ async def not_found_handler(request, exc: NotFoundError):
 # Gets the board for display
 @app.get("/api/boards")
 def get_boards():
-    board_ids = [board.id for board in service.get_all_boards()]
-    return [_serialize_board(board_id) for board_id in board_ids]
+    return service.get_all_boards()
 
 @app.get("/api/boards/{board_id}")
 def get_board(board_id: int):
     try:
-        return _serialize_board(board_id)
+        return service.get_board(board_id)
     except NotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
