@@ -28,5 +28,6 @@ tasks = Table(
     Column("column_id", Integer, ForeignKey("columns.id", ondelete="CASCADE"), nullable=False, index=True),
     Column("title", String(50), nullable=False),
     Column("description", String(200), nullable=False),
+    Column("assignee", String(50), nullable=False, default=""),
     Column("position", Integer, nullable=False),
 )

@@ -3,36 +3,133 @@
     {
       "id": 1,
       "name": "My Board",
-      "columns": [1, 2, 3]
-    }
-  ],
-  "columns": [
-    {
-      "id": 1,
-      "name": "To Do",
-      "position": 0,
-      "board_id": 1
+      "columns": [
+        {
+          "id": 1,
+          "name": "To Do",
+          "position": 0,
+          "board_id": 1,
+          "tasks": [
+            {
+              "id": 1,
+              "title": "Welcome Task",
+              "description": "Drag me to move",
+              "assignee": "",
+              "column_id": 1,
+              "position": 0
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "In Progress",
+          "position": 1,
+          "board_id": 1,
+          "tasks": []
+        },
+        {
+          "id": 3,
+          "name": "Done",
+          "position": 2,
+          "board_id": 1,
+          "tasks": []
+        }
+      ]
     },
+
     {
       "id": 2,
-      "name": "In Progress",
-      "position": 1,
-      "board_id": 1
-    },
-    {
-      "id": 3,
-      "name": "Done",
-      "position": 2,
-      "board_id": 1
-    }
-  ],
-  "tasks": [
-    {
-      "id": 1,
-      "title": "Welcome Task",
-      "description": "Drag me to move",
-      "column_id": 1,
-      "position": 0
+      "name": "Musique",
+      "columns": [
+        {
+          "id": 1,
+          "name": "To Do",
+          "position": 0,
+          "board_id": 1,
+          "tasks": [
+            {
+              "id": 1,
+              "title": "Welcome to the Parade",
+              "description": "Drag me to move",
+              "assignee": "Lenny",
+              "column_id": 1,
+              "position": 0
+            },
+            {
+              "id": 2,
+              "title": "And another one",
+              "description": "... bites the dust!",
+              "assignee": "Wolf",
+              "column_id": 1,
+              "position": 1
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Plan",
+          "position": 1,
+          "board_id": 1,
+          "tasks": [
+            {
+              "id": 3,
+              "title": "Become famous",
+              "description": "Through the fanciest of music",
+              "assignee": "Hayden",
+              "column_id": 2,
+              "position": 0
+            },
+            {
+              "id": 4,
+              "title": "Ein Klein Natchmusik",
+              "description": "Legendary track, innit?",
+              "assignee": "Mozart",
+              "column_id": 2,
+              "position": 1
+            },
+            {
+              "id": 5,
+              "title": "Symphony Nr. 7",
+              "description": "Very dramatic.",
+              "assignee": "Beethoven",
+              "column_id": 2,
+              "position": 2
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "In Progress",
+          "position": 2,
+          "board_id": 1,
+          "tasks": [
+            {
+              "id": 6,
+              "title": "Spanish Suite",
+              "description": "Nice guitar.",
+              "assignee": "Rodrigo",
+              "column_id": 3,
+              "position": 0
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Done",
+          "position": 3,
+          "board_id": 1,
+          "tasks": [
+            {
+              "id": 7,
+              "title": "Full Rush",
+              "description": "It's not the B-site.",
+              "assignee": "Leeroy Jenkins",
+              "column_id": 4,
+              "position": 0
+            }
+          ]
+        }
+      ]
     }
   ]
 }
