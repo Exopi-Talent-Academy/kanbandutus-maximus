@@ -43,6 +43,8 @@
           type="number"
           placeholder="Task Position"
           [(ngModel)]="currentTask.position"
+          [max]="3"
+          min="0"
         />
       </label>
     </div>
