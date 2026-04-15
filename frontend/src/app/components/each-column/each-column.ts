@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Container } from '../../shared/container/container';
 import { Task } from '../../models/types';
 import { EachTask } from '../task/task';
 import { AddNewTask } from '../add-new-task/add-new-task';
+import { Tasks } from '../../services/tasks';
 
 @Component({
   selector: 'app-each-column',
@@ -14,6 +15,8 @@ export class EachColumn implements OnInit {
   @Input() tasks: Task[] = [];
   @Input() columnName!: string;
 
+  taskService = inject(Tasks);
+
   ngOnInit() {
     console.log('Column Name:', this.columnName);
     for (const task of this.tasks) {
@@ -24,5 +27,24 @@ export class EachColumn implements OnInit {
         this.columnName,
       );
     }
+  }
+
+  onDragdrop() {
+    console.log('Drag ended on column:', this.columnName);
+    // this.taskService.moveTask.subscribe((movedTask) => {
+    //   if (movedTask) {
+    //     this.taskService
+    //       .updateTask({
+    //         ...movedTask,
+    //         status: this.columnName as Task['status'],
+    //       })
+    //       .subscribe(() => {
+    //         this.taskService.onMoveTaskComplete();
+    //         console.log('Task moved successfully:', movedTask);
+    //       });
+    //   }
+    // });
+
+    this.taskService.onMoveTaskComplete();
   }
 }

@@ -14,6 +14,16 @@ export class Tasks {
 
   updateAvailable = new Subject<boolean>();
 
+  moveTask = new Subject<Task | null>();
+
+  onTaskMove(task: Task): void {
+    this.moveTask.next(task);
+  }
+
+  onMoveTaskComplete(): void {
+    this.moveTask.next(null);
+  }
+
   private tasks: Task[] = [];
 
   editTask = new Subject<Task | null>();

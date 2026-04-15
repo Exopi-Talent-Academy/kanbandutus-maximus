@@ -30,7 +30,7 @@
     {
       "id": "1",
       "title": "Task 1",
-      "status": "To Do",
+      "status": "Plan",
       "assignee": "John Doe",
       "description": "Description for Task 1"
     },
@@ -44,7 +44,7 @@
     {
       "id": "3",
       "title": "Task 3",
-      "status": "Done",
+      "status": "Plan",
       "assignee": "Jane Smith",
       "description": "Description for Task 3"
     },
@@ -58,14 +58,14 @@
     {
       "id": "5",
       "title": "Task 5",
-      "status": "In Progress",
+      "status": "Plan",
       "assignee": "Bob Brown",
       "description": "Description for Task 51"
     },
     {
       "id": "6",
       "title": "Task 6",
-      "status": "TO DO",
+      "status": "To Do",
       "assignee": "Diana Evans",
       "description": "Description for Task 6"
     }
