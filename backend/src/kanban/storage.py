@@ -81,17 +81,112 @@ class JsonStorage(StorageInterface):
         with open(self.data_file, "w") as f:
             json.dump(data, f, indent=2)
 
+    def _link_nested_relations(self, data: KanbanData) -> None:
+        columns_by_board: dict[int, list[Column]] = {}
+        for column in data.columns:
+            columns_by_board.setdefault(column.board_id, []).append(column)
+
+        tasks_by_column: dict[int, list[Task]] = {}
+        for task in data.tasks:
+            tasks_by_column.setdefault(task.column_id, []).append(task)
+
+        for board in data.boards:
+            board_columns = sorted(columns_by_board.get(board.id, []), key=lambda c: c.position)
+            board.columns = board_columns
+            for column in board.columns:
+                column.tasks = sorted(tasks_by_column.get(column.id, []), key=lambda t: t.position)
+
     def _dict_to_kanban(self, data: dict) -> KanbanData:
-        boards = [Board(id=b["id"], name=b["name"], columns=b.get("columns", [])) for b in data.get("boards", [])]
-        columns = [Column(id=c["id"], name=c["name"], position=c["position"], board_id=c.get("board_id", 0)) for c in data.get("columns", [])]
-        tasks = [Task(id=t["id"], title=t["title"], description=t.get("description", ""), column_id=t.get("column_id", 0), position=t.get("position", 0)) for t in data.get("tasks", [])]
-        return KanbanData(boards=boards, columns=columns, tasks=tasks)
+        boards: list[Board] = []
+        columns: list[Column] = []
+        tasks: list[Task] = []
+
+        # Backward-compatible read: supports nested board->columns->tasks and flat arrays.
+        for board_data in data.get("boards", []):
+            board = Board(id=board_data["id"], name=board_data["name"], columns=[])
+            boards.append(board)
+
+            for column_data in board_data.get("columns", []):
+                column = Column(
+                    id=column_data["id"],
+                    name=column_data["name"],
+                    position=column_data["position"],
+                    board_id=column_data.get("board_id", board.id),
+                    tasks=[],
+                )
+                columns.append(column)
+
+                for task_data in column_data.get("tasks", []):
+                    tasks.append(
+                        Task(
+                            id=task_data["id"],
+                            title=task_data["title"],
+                            description=task_data.get("description", ""),
+                            assignee=task_data.get("assignee", ""),
+                            column_id=task_data.get("column_id", column.id),
+                            position=task_data.get("position", 0),
+                        )
+                    )
+
+        if data.get("columns"):
+            columns = [
+                Column(
+                    id=c["id"],
+                    name=c["name"],
+                    position=c["position"],
+                    board_id=c.get("board_id", 0),
+                    tasks=[],
+                )
+                for c in data.get("columns", [])
+            ]
+
+        if data.get("tasks"):
+            tasks = [
+                Task(
+                    id=t["id"],
+                    title=t["title"],
+                    description=t.get("description", ""),
+                    assignee=t.get("assignee", ""),
+                    column_id=t.get("column_id", 0),
+                    position=t.get("position", 0),
+                )
+                for t in data.get("tasks", [])
+            ]
+
+        kanban_data = KanbanData(boards=boards, columns=columns, tasks=tasks)
+        self._link_nested_relations(kanban_data)
+        return kanban_data
 
     def _kanban_to_dict(self, data: KanbanData) -> dict:
+        self._link_nested_relations(data)
         return {
-            "boards": [{"id": b.id, "name": b.name, "columns": b.columns} for b in data.boards],
-            "columns": [{"id": c.id, "name": c.name, "position": c.position, "board_id": c.board_id} for c in data.columns],
-            "tasks": [{"id": t.id, "title": t.title, "description": t.description, "column_id": t.column_id, "position": t.position} for t in data.tasks]
+            "boards": [
+                {
+                    "id": board.id,
+                    "name": board.name,
+                    "columns": [
+                        {
+                            "id": column.id,
+                            "name": column.name,
+                            "position": column.position,
+                            "board_id": column.board_id,
+                            "tasks": [
+                                {
+                                    "id": task.id,
+                                    "title": task.title,
+                                    "description": task.description,
+                                    "assignee": task.assignee,
+                                    "column_id": task.column_id,
+                                    "position": task.position,
+                                }
+                                for task in column.tasks
+                            ],
+                        }
+                        for column in board.columns
+                    ],
+                }
+                for board in data.boards
+            ]
         }
 
     def load(self) -> KanbanData:
@@ -142,9 +237,9 @@ class JsonStorage(StorageInterface):
         if not board:
             return None
         new_id = data.get_next_id("column")
-        column = Column(id=new_id, name=name, position=position, board_id=board_id)
+        column = Column(id=new_id, name=name, position=position, board_id=board_id, tasks=[])
         data.columns.append(column)
-        board.columns.append(new_id)
+        board.columns.append(column)
         self.save(data)
         return column
 
@@ -165,8 +260,7 @@ class JsonStorage(StorageInterface):
         data.tasks = [t for t in data.tasks if t.column_id != column_id]
         data.columns = [c for c in data.columns if c.id != column_id]
         for board in data.boards:
-            if column_id in board.columns:
-                board.columns.remove(column_id)
+            board.columns = [c for c in board.columns if c.id != column_id]
         self.save(data)
         return True
 
@@ -180,8 +274,9 @@ class JsonStorage(StorageInterface):
         if not column:
             return None
         new_id = data.get_next_id("task")
-        task = Task(id=new_id, title=title, description=description, column_id=column_id, position=position)
+        task = Task(id=new_id, title=title, description=description, assignee="", column_id=column_id, position=position)
         data.tasks.append(task)
+        column.tasks.append(task)
         self.save(data)
         return task
 
