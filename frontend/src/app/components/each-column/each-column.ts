@@ -33,14 +33,10 @@ export class EachColumn implements OnInit {
   onDragDrop(event: DragEvent) {
     event.preventDefault();
 
-    console.log('Drag dropped on column:', this.columnName);
     this.taskService.moveTask.subscribe((movedTask) => {
       if (movedTask) {
         this.taskService
-          .updateTask({
-            ...movedTask,
-            position: this.columnName as unknown as number,
-          })
+          .updateTaskPosition(movedTask.id, this.columnName as unknown as number, this.columnName)
           .subscribe(() => {
             this.taskService.onMoveTaskComplete();
             console.log('Task moved successfully:', movedTask);

@@ -63,6 +63,14 @@ export class Tasks {
     return this.http.delete<Task>(`${BASE_URL}/tasks/${taskId}`);
   }
 
+  updateTaskPosition(taskId: string, newPosition: number, name: string): Observable<Task> {
+    this.updateAvailable.next(true);
+    return this.http.patch<Task>(`${BASE_URL}/boards/${taskId}`, {
+      position: newPosition,
+      name: name,
+    });
+  }
+
   showUpdateNotification() {
     this.updateAvailable.next(true);
     setTimeout(() => {
