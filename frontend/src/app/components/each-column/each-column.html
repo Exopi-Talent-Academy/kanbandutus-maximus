@@ -1,5 +1,5 @@
 <app-container>
-  <div class="each-column">
+  <div class="each-column" (drop)="onDragDrop($event)" (dragover)="onDragOver($event)">
     <p class="font-bold mb-4 text-center">{{ columnName }}</p>
     @for (task of tasks; track task) {
       @if (task.status === columnName) {

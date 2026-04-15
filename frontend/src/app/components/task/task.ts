@@ -32,4 +32,7 @@ export class EachTask implements OnInit {
       description: this.task.description,
     });
   }
+  onDragEnd(event: DragEvent) {
+    this.taskService.onTaskMove(this.task);
+  }
 }
