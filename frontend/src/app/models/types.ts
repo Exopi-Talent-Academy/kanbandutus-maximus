@@ -1,14 +1,15 @@
-export enum TaskType {
-  TODO = 'To Do',
-  PLAN = 'Plan',
-  IN_PROGRESS = 'In Progress',
-  DONE = 'Done',
-}
-
 export interface Task {
   id: string;
   title: string;
   description?: string;
-  status: TaskType;
   assignee?: string;
+  column_id?: number;
+  position?: number;
 }
+
+export const columnNames = {
+  0: 'To Do',
+  1: 'Plan',
+  2: 'In Progress',
+  3: 'Done',
+};

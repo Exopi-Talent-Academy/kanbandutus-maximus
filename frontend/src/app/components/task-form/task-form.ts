@@ -1,23 +1,35 @@
 import { Component, inject, input, Input, OnInit, signal } from '@angular/core';
 import { Container } from '../../shared/container/container';
 import { FormsModule } from '@angular/forms';
-import { Task, TaskType } from '../../models/types';
+import { Task } from '../../models/types';
 import { Tasks } from '../../services/tasks';
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-task-form',
-  imports: [Container, FormsModule],
+  imports: [Container, FormsModule, FontAwesomeModule],
   templateUrl: './task-form.html',
   styleUrl: './task-form.css',
 })
 export class TaskForm implements OnInit {
+  faClose = faClose;
+  faEdit = faEdit;
+  faAdd = faAdd;
+  faTrash = faTrash;
   @Input() currentTask!: Task;
-  @Input() addTask: boolean = false;
 
   taskService = inject(Tasks);
+  addTaskMode = false;
 
   ngOnInit() {
-    console.log('Task received in TaskForm component:', this.currentTask);
+    this.taskService.addTaskMode.subscribe((isAdd) => {
+      this.addTaskMode = isAdd;
+    });
   }
   deleteTask() {
     this.taskService.deleteTask(this.currentTask.id).subscribe(() => {
@@ -26,9 +38,10 @@ export class TaskForm implements OnInit {
   }
 
   saveTask() {
-    if (this.addTask) {
+    if (this.addTaskMode) {
       this.taskService.addTask(this.currentTask).subscribe(() => {
         this.taskService.cancelEditTask();
+        this.taskService.togggleAddTaskMode(false);
       });
     } else {
       this.taskService.updateTask(this.currentTask).subscribe(() => {

@@ -38,18 +38,24 @@
         >Status:
         <input
           class="font-normal"
-          type="text"
+          type="number"
           placeholder="Task Status"
-          [(ngModel)]="currentTask.status"
+          [(ngModel)]="currentTask.column_id"
         />
       </label>
     </div>
   </div>
   <div class="flex justify-between mt-4">
     <button class="bg-gray-200 p-2" (click)="saveTask()">
-      {{ addTask ? 'Add' : 'Update' }} Task
+      @if (addTaskMode) {
+        <fa-icon [icon]="faAdd" class="mr-2" />
+        Add Task
+      } @else {
+        <fa-icon [icon]="faEdit" class="mr-2" />
+        Update Task
+      }
     </button>
-    <button (click)="taskService.cancelEditTask()">Cancel</button>
-    <button (click)="deleteTask()">Delete</button>
+    <!-- <button (click)="taskService.cancelEditTask()"><fa-icon [icon]="faClose" />Cancel</button> -->
+    <button (click)="deleteTask()"><fa-icon [icon]="faTrash" class="mr-2" />Delete</button>
   </div>
 </app-container>
