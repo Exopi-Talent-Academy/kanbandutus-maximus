@@ -31,11 +31,7 @@ export class TaskForm implements OnInit {
       this.addTaskMode = isAdd;
     });
   }
-  deleteTask() {
-    this.taskService.deleteTask(this.currentTask.id).subscribe(() => {
-      this.taskService.cancelEditTask();
-    });
-  }
+  deleteTask() {}
 
   saveTask() {
     if (this.addTaskMode) {

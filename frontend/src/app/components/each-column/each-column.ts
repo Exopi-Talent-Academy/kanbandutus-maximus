@@ -15,6 +15,8 @@ import { columnNames } from '../../models/types';
 export class EachColumn implements OnInit {
   @Input() tasks: Task[] = [];
   @Input() columnName!: string;
+  @Input() position!: number;
+  @Input() boardId!: number;
 
   taskService = inject(Tasks);
 
@@ -36,7 +38,7 @@ export class EachColumn implements OnInit {
     this.taskService.moveTask.subscribe((movedTask) => {
       if (movedTask) {
         this.taskService
-          .updateTaskPosition(movedTask.id, this.columnName as unknown as number, this.columnName)
+          .updateTaskPosition(this.boardId, this.position, this.columnName)
           .subscribe(() => {
             this.taskService.onMoveTaskComplete();
             console.log('Task moved successfully:', movedTask);

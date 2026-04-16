@@ -23,10 +23,11 @@ export class App implements OnInit {
   faClose = faClose;
 
   task = signal<Task>({
-    id: '',
+    id: 0,
     title: '',
     column_id: 0,
     assignee: '',
+    position: 0,
   });
 
   isEditable = signal(false);
@@ -42,10 +43,11 @@ export class App implements OnInit {
       } else {
         this.isEditable.set(false);
         this.task.set({
-          id: '',
+          id: 0,
           title: '',
           column_id: 0,
           assignee: '',
+          position: 0,
         });
       }
     });
@@ -56,6 +58,6 @@ export class App implements OnInit {
   }
 
   isAddTask() {
-    return this.task().id === '';
+    return this.task().id === 0;
   }
 }

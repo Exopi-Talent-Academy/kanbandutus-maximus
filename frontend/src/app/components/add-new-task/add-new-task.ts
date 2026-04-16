@@ -16,7 +16,7 @@ export class AddNewTask {
 
   addNewTask() {
     this.taskService.onEditTask({
-      id: '',
+      id: 0,
       title: '',
       column_id: 0,
       assignee: '',

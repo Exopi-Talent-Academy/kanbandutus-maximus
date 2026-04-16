@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Task } from '../models/types';
+import { BoardType, Task } from '../models/types';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -63,11 +63,15 @@ export class Tasks {
     return this.http.delete<Task>(`${BASE_URL}/tasks/${taskId}`);
   }
 
-  updateTaskPosition(taskId: string, newPosition: number, name: string): Observable<Task> {
+  updateTaskPosition(boardId: number, newPosition: number, name: string): Observable<BoardType> {
     this.updateAvailable.next(true);
-    return this.http.patch<Task>(`${BASE_URL}/boards/${taskId}`, {
-      position: newPosition,
-      name: name,
+    return this.http.patch<BoardType>(`${BASE_URL}/boards/${boardId}`, {
+      columns: [
+        {
+          name,
+          position: newPosition,
+        },
+      ],
     });
   }
 

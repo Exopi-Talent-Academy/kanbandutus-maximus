@@ -1,20 +1,10 @@
 export interface Task {
-  id: string;
+  id: number;
   title: string;
   description?: string;
   assignee?: string;
   column_id?: number;
   position?: number;
-}
-
-export interface BoardType {
-  id: number;
-  name: string;
-  columns: {
-    id: number;
-    name: string;
-    tasks: Task[];
-  }[];
 }
 
 export interface ColumnType {
@@ -23,6 +13,12 @@ export interface ColumnType {
   position: number;
   board_id: number;
   tasks: Task[];
+}
+
+export interface BoardType {
+  id: number;
+  name: string;
+  columns: ColumnType[];
 }
 
 export const columnNames = {
