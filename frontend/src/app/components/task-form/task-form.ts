@@ -1,7 +1,7 @@
 import { Component, inject, input, Input, OnInit, signal } from '@angular/core';
 import { Container } from '../../shared/container/container';
 import { FormsModule } from '@angular/forms';
-import { BoardType, Task } from '../../models/types';
+import { BoardType, ColumnType, Task } from '../../models/types';
 import { Tasks } from '../../services/tasks';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -34,7 +34,32 @@ export class TaskForm implements OnInit {
       this.addTaskMode = isAdd;
     });
   }
-  deleteTask() {}
+  deleteTask() {
+    let board = this.taskService.currentBoard;
+    const columnId = this.taskService.fromColumnId;
+
+    // let column = board?.columns.find((column) => column.id === columnId);
+    // const tasks = column?.tasks.filter((task) => task.id !== this.currentTask.id) ?? [];
+
+    // if (column) {
+    //   column = { ...column, tasks: tasks };
+    // }
+
+    board?.columns.map((col) => {
+      if (col.id === columnId) {
+        let tasks = col.tasks.filter((task) => task.id !== this.currentTask.id);
+        col.tasks = tasks;
+        return col;
+      } else {
+        return col;
+      }
+    });
+
+    this.taskService.updateBoard('2', board as BoardType).subscribe(() => {
+      console.log('Board deleted successfully after saving task');
+    });
+    this.taskService.cancelEditTask();
+  }
 
   saveTask() {
     const board = this.taskService.currentBoard;
