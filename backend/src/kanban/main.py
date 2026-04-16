@@ -1,15 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from .config import get_data_file
+from .config import get_data_file, get_storage_backend
 from .frontend import AngularMock, FrontendInterface
 from .service import KanbanService, NotFoundError
-from .storage import JsonStorage, StorageInterface
+from .storage import JsonStorage, SqlAlchemyStorage, StorageInterface
 
 app = FastAPI(title="Kanban API")
 
 
 def get_storage() -> StorageInterface:
+    if get_storage_backend() == "sqlite":
+        return SqlAlchemyStorage()
     return JsonStorage(get_data_file())
 
 
@@ -18,6 +20,10 @@ def get_frontend() -> FrontendInterface:
 
 
 service = KanbanService(get_storage())
+
+
+# Manual serializer helpers are no longer needed for board responses;
+# FastAPI can encode nested dataclasses directly from service objects.
 
 
 class BoardCreate(BaseModel):
@@ -146,12 +152,12 @@ def get_board(board_id: int):
 ##### TASKS #####
 
 ## Get task. We probably shouldn't use this (use Get Board instead).
-# @app.get("/api/columns/{column_id}/tasks")
-# def get_tasks(column_id: int):
-#     try:
-#         return service.get_tasks_by_column(column_id)
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+@app.get("/api/columns/{column_id}/tasks")
+def get_tasks(column_id: int):
+    try:
+        return service.get_tasks_by_column(column_id)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 ## Creates new Task.
 @app.post("/api/tasks")
