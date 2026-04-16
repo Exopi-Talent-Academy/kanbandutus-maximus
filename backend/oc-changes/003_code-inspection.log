@@ -1,0 +1,154 @@
+================================================================================
+CODE INSPECTION REPORT
+================================================================================
+
+--------------------------------------------------------------------------------
+INTENTIONS
+--------------------------------------------------------------------------------
+
+| Aspect      | Description                                                    |
+|-------------|----------------------------------------------------------------|
+| Intention   | Code inspection to identify code smells and quality issues      |
+| Goal        | Discover and document code quality issues for remediation       |
+| Scope       | Entire Python codebase (src/, tests/, alembic/)                 |
+
+--------------------------------------------------------------------------------
+PLAN
+--------------------------------------------------------------------------------
+
+Tools:     pylint, flake8, ruff, bandit, mypy
+Location:  backend/oc-changes/003_code-inspection.log
+
+Execution:
+  1. ruff check .           - Fast style/rule scanning
+  2. flake8 .               - PEP8 compliance
+  3. pylint src/ tests/     - Deep analysis, code smells
+  4. bandit -r src/         - Security vulnerabilities
+  5. mypy src/              - Type checking
+
+--------------------------------------------------------------------------------
+RESULTS
+--------------------------------------------------------------------------------
+
+SUMMARY
+-------
+| Category                | Count |
+|-------------------------|-------|
+| Linting/formatting      | ~130  |
+| Type errors             | 7     |
+| Security issues         | 0     |
+| Dead code sections      | 6     |
+| Duplicate implementations| 4     |
+| Design pattern concerns | 4     |
+| Thin abstractions       | 4     |
+| Files needing refactor  | 3     |
+
+
+TOOL FINDINGS
+-------------
+| Tool    | Issues | Notable                                       |
+|---------|--------|-----------------------------------------------|
+| ruff    | 9      | Unused imports (auto-fixable)                 |
+| flake8  | 97     | Line length violations dominate (79 char limit)|
+| pylint  | ~30    | Missing encoding, re-raise issues            |
+| bandit  | 0      | Clean security posture                        |
+| mypy    | 7      | SQLAlchemy Base type alias issues             |
+
+
+DEAD CODE
+---------
+Sections that remain dead even if all commented-out endpoints are reactivated:
+
+1. Core SQL schemas
+   Location:  schemas.py (33 lines)
+   Reason:    Defined with Table() objects but never imported anywhere.
+              ORM models in orm_models.py are the actual source of truth.
+
+2. Alembic migration
+   Location:  alembic/versions/9c0bc8230f3c_init_schema.py (59 lines)
+   Reason:    Exists but db.py uses Base.metadata.create_all() for
+              auto-migration; Alembic is never initialized.
+
+3. Frontend abstraction
+   Location:  frontend.py (26 lines)
+   Reason:    FrontendInterface and AngularMock defined but get_frontend()
+              is never called from main.py.
+
+4. get_frontend() function
+   Location:  main.py:18-19
+   Reason:    Defined and never invoked; dead helper function.
+
+5. get_sqlite_file() function
+   Location:  config.py:16-19
+   Reason:    Defined but never called; get_database_url() constructs the
+              path differently.
+
+6. KanbanData.get_columns_by_board()
+   Location:  models.py:55-56
+   Reason:    Service has its own implementation at service.py:52-57;
+              this method is never called.
+
+
+DUPLICATE IMPLEMENTATIONS
+-------------------------
+1. Three schema definition styles (schemas.py, orm_models.py, Alembic migration)
+2. Repeated load/save pattern in JsonStorage (16 methods)
+3. Task mapping logic duplicated across storage methods
+4. KanbanData.get_columns_by_board() vs service implementation
+
+
+DESIGN ISSUES
+-------------
+1. Thin Service Layer
+   Current:   KanbanService wraps StorageInterface 1:1
+   Problem:   No business logic, just pass-through + null checks
+   Impact:    Extra indirection with no value; could call storage directly
+
+2. Excessive Interface
+   Current:   StorageInterface declares 18 abstract methods
+   Problem:   Forces both implementations to duplicate identical signatures
+   Impact:    Adding new entity requires editing 3 files; too granular
+
+3. Domain/DTO Coupling
+   Current:   Board, Column, Task dataclasses used everywhere
+   Problem:   Domain models leak into API responses and tests
+   Impact:    Changing domain model breaks API contract; tight coupling
+
+4. Multiple Config Paths
+   Current:   KANBAN_STORAGE_BACKEND, KANBAN_DATABASE_URL, KANBAN_DATA_DIR
+   Problem:   Overlapping configuration for storage selection
+   Impact:    Confusion about precedence; maintenance burden
+
+
+SIGNS OF MULTIPLE DEVELOPERS
+----------------------------
+The codebase shows signs of at least 5 different contributors with divergent
+philosophies:
+
+| Persona           | Contributions                              | Evidence                                    |
+|-------------------|--------------------------------------------|---------------------------------------------|
+| "The Architect"   | Created abstractions                       | StorageInterface, KanbanService,            |
+|                   |                                            | FrontendInterface - heavy pattern emphasis  |
+| "The Pragmatist"  | Commented out endpoints                    | Left ~50 lines dead with notes              |
+|                   |                                            | ("probably shouldn't use this")             |
+| "The ORM Migrator"| Created 3 schema styles                   | Started Core, switched ORM, added Alembic   |
+|                   |                                            | but still using auto-migrate                |
+| "The Frontend Dev"| Built scaffolding                          | frontend.py with AngularMock               |
+|                   |                                            | planned but abandoned without removal        |
+| "The Ops Contributor"| Wrote isolated tooling                   | cli.py uses argparse + direct instantiation|
+|                   |                                            | separate from FastAPI app patterns          |
+
+Interpretation: This codebase reflects either a team with very different
+coding philosophies, or a single developer who went through distinct phases
+without cleaning up previous approaches. The architectural purity of early
+abstractions was gradually abandoned in favor of pragmatic shortcuts, leaving
+behind a patchwork of intentions.
+
+
+REFACTORING CANDIDATES
+----------------------
+| File           | Lines | Issue                                         |
+|----------------|-------|-----------------------------------------------|
+| storage.py     | 613   | Split into base/json/sqlalchemy modules        |
+| main.py        | 193   | Remove dead code, split routes                |
+| KanbanService  | 121   | Either remove or add real business logic       |
