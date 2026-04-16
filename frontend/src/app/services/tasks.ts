@@ -59,6 +59,10 @@ export class Tasks {
     return this.http.post(`${BASE_URL}/boards`, board);
   }
 
+  updateBoard(boardId: string, board: BoardType): Observable<any> {
+    return this.http.put(`${BASE_URL}/boards/${boardId}`, board);
+  }
+
   showUpdateNotification() {
     this.updateAvailable.next(true);
     setTimeout(() => {

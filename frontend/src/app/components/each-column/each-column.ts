@@ -35,11 +35,8 @@ export class EachColumn implements OnInit {
 
     this.updateBoard(taskToMove!, fromColumnId);
 
-    this.taskService.deleteBoard(this.boardId).subscribe(() => {
-      console.log('Board deleted successfully after drag and drop');
-      this.taskService.addBoard(this.board).subscribe(() => {
-        console.log('Board updated successfully after drag and drop');
-      });
+    this.taskService.updateBoard(this.boardId.toString(), this.board).subscribe(() => {
+      console.log('Board updated successfully after drag and drop');
     });
 
     this.taskService.onMoveTaskComplete();

@@ -126,72 +126,21 @@
           "name": "To Do",
           "position": 0,
           "board_id": 2,
-          "tasks": [
-            {
-              "id": 2,
-              "title": "Welcome to the Parade",
-              "column_id": 1,
-              "description": "Drag me to move",
-              "assignee": "Lenny dsadas",
-              "position": 0
-            },
-            {
-              "id": 3,
-              "title": "And another one",
-              "column_id": 1,
-              "description": "... bites the dust!",
-              "assignee": "Wolf dsdsa",
-              "position": 1
-            }
-          ]
+          "tasks": []
         },
         {
           "id": 5,
           "name": "Plan",
           "position": 1,
           "board_id": 2,
-          "tasks": [
-            {
-              "id": 4,
-              "title": "Become famous",
-              "column_id": 5,
-              "description": "Through the fanciest of music",
-              "assignee": "Hayden ddd",
-              "position": 0
-            },
-            {
-              "id": 5,
-              "title": "Ein Klein Natchmusik",
-              "column_id": 5,
-              "description": "Legendary track, innit?",
-              "assignee": "Mozart ssss",
-              "position": 1
-            },
-            {
-              "id": 6,
-              "title": "Symphony Nr. 7",
-              "column_id": 5,
-              "description": "Very dramatic.",
-              "assignee": "Beethoven ssss",
-              "position": 2
-            }
-          ]
+          "tasks": []
         },
         {
           "id": 6,
           "name": "In Progress",
           "position": 2,
           "board_id": 2,
-          "tasks": [
-            {
-              "id": 7,
-              "title": "Spanish Suite",
-              "column_id": 6,
-              "description": "Nice guitar.",
-              "assignee": "Rodrigo ssss",
-              "position": 0
-            }
-          ]
+          "tasks": []
         },
         {
           "id": 7,
@@ -206,6 +155,54 @@
               "description": "It's not the B-site.",
               "assignee": "Leeroy Jenkins",
               "position": 0
+            },
+            {
+              "id": 2,
+              "title": "Welcome to the Parade",
+              "column_id": 7,
+              "description": "Drag me to move",
+              "assignee": "Lenny dsadas",
+              "position": 0
+            },
+            {
+              "id": 4,
+              "title": "Become famous",
+              "column_id": 7,
+              "description": "Through the fanciest of music",
+              "assignee": "Hayden ddd",
+              "position": 0
+            },
+            {
+              "id": 5,
+              "title": "Ein Klein Natchmusik",
+              "column_id": 7,
+              "description": "Legendary track, innit?",
+              "assignee": "Mozart ssss",
+              "position": 1
+            },
+            {
+              "id": 7,
+              "title": "Spanish Suite",
+              "column_id": 7,
+              "description": "Nice guitar.",
+              "assignee": "Rodrigo ssss",
+              "position": 0
+            },
+            {
+              "id": 6,
+              "title": "Symphony Nr. 7",
+              "column_id": 7,
+              "description": "Very dramatic.",
+              "assignee": "Beethoven ssss",
+              "position": 2
+            },
+            {
+              "id": 3,
+              "title": "And another one",
+              "column_id": 7,
+              "description": "... bites the dust!",
+              "assignee": "Wolf dsdsa",
+              "position": 1
             }
           ]
         }
