@@ -22,11 +22,14 @@ export class TaskForm implements OnInit {
   faAdd = faAdd;
   faTrash = faTrash;
   @Input() currentTask!: Task;
+  @Input() boardId!: number;
+  @Input() position!: number;
 
   taskService = inject(Tasks);
   addTaskMode = false;
 
   ngOnInit() {
+    console.log('dsjflkjdsflk', this.boardId, this.position);
     this.taskService.addTaskMode.subscribe((isAdd) => {
       this.addTaskMode = isAdd;
     });
@@ -35,12 +38,12 @@ export class TaskForm implements OnInit {
 
   saveTask() {
     if (this.addTaskMode) {
-      this.taskService.addTask(this.currentTask).subscribe(() => {
+      this.taskService.addTask(this.currentTask, this.boardId, this.position).subscribe(() => {
         this.taskService.cancelEditTask();
         this.taskService.togggleAddTaskMode(false);
       });
     } else {
-      this.taskService.updateTask(this.currentTask).subscribe(() => {
+      this.taskService.updateTask(this.currentTask, this.boardId, this.position).subscribe(() => {
         this.taskService.cancelEditTask();
       });
     }

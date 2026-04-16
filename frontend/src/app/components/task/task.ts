@@ -10,6 +10,8 @@ import { Task } from '../../models/types';
 })
 export class EachTask implements OnInit {
   @Input() task!: Task;
+  @Input() boardId!: number;
+  @Input() position!: number;
 
   taskService = inject(Tasks);
 

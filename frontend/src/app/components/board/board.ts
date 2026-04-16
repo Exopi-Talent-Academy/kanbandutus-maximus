@@ -30,11 +30,18 @@ export class Board implements OnInit {
     });
   }
 
-  loadTasks() {
+  loadBoards() {
     this.taskService.getBoards().subscribe((boards) => {
       this.boards.set(boards);
       this.currentBoard.set(boards[1] || null); // Set the current board to the first one, or null if no boards are available
       console.log('Board loaded:', boards[1]);
+    });
+  }
+
+  loadTasks() {
+    this.taskService.getBoard(2).subscribe((board) => {
+      this.currentBoard.set(board);
+      console.log('Tasks loaded for board:', board);
     });
   }
 }
