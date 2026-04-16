@@ -20,12 +20,14 @@ export class Board implements OnInit {
   currentBoard = signal<BoardType | null>(null);
 
   ngOnInit() {
-    this.loadTasks();
+    this.loadBoards();
+    // this.loadTasks();
     this.taskService.updateAvailable.subscribe(() => {
       this.tasks.set([]); // Clear current tasks before reloading
       console.log('Update available, reloading tasks...');
       setTimeout(() => {
-        this.loadTasks();
+        this.loadBoards();
+        // this.loadTasks();
       }, 100); // Add a slight delay to ensure the backend has processed the update
     });
   }
@@ -39,7 +41,7 @@ export class Board implements OnInit {
   }
 
   loadTasks() {
-    this.taskService.getBoard(2).subscribe((board) => {
+    this.taskService.getBoard('Musique').subscribe((board) => {
       this.currentBoard.set(board);
       console.log('Tasks loaded for board:', board);
     });

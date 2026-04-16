@@ -6,6 +6,7 @@
         [tasks]="column.tasks"
         [position]="column.position"
         [boardId]="currentBoard()?.id ?? 0"
+        [board]="currentBoard()!"
       ></app-each-column>
     }
   </div>

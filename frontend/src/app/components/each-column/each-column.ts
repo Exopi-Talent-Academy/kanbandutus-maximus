@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { Container } from '../../shared/container/container';
-import { Task } from '../../models/types';
+import { BoardType, Task } from '../../models/types';
 import { EachTask } from '../task/task';
 import { AddNewTask } from '../add-new-task/add-new-task';
 import { Tasks } from '../../services/tasks';
@@ -17,6 +17,7 @@ export class EachColumn implements OnInit {
   @Input() columnName!: string;
   @Input() position!: number;
   @Input() boardId!: number;
+  @Input() board!: BoardType;
 
   taskService = inject(Tasks);
 
@@ -37,13 +38,15 @@ export class EachColumn implements OnInit {
 
     this.taskService.moveTask.subscribe((movedTask) => {
       if (movedTask) {
-        this.taskService
-          .updateTaskPosition(this.boardId, this.position, this.columnName)
-          .subscribe(() => {
-            this.taskService.onMoveTaskComplete();
-            console.log('Task moved successfully:', movedTask);
-          });
+        this.updateBoard(movedTask);
       }
+    });
+
+    this.taskService.deleteBoard(this.boardId).subscribe(() => {
+      console.log('Board deleted successfully after drag and drop');
+      this.taskService.addBoard(this.board).subscribe(() => {
+        console.log('Board updated successfully after drag and drop');
+      });
     });
 
     this.taskService.onMoveTaskComplete();
@@ -51,5 +54,26 @@ export class EachColumn implements OnInit {
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
+  }
+
+  updateBoard(newTask: Task) {
+    this.board.columns = this.board.columns.map((column) => {
+      if (column.position === this.position && column.name === this.columnName) {
+        const newTasks = column.tasks.map((task) => {
+          if (task.id === newTask.id) {
+            return newTask;
+          } else {
+            return task;
+          }
+        });
+
+        return {
+          ...column,
+          tasks: newTasks,
+        };
+      } else {
+        return column;
+      }
+    });
   }
 }

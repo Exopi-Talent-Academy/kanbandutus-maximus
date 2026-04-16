@@ -30,22 +30,22 @@ export class TaskForm implements OnInit {
 
   ngOnInit() {
     console.log('dsjflkjdsflk', this.boardId, this.position);
-    this.taskService.addTaskMode.subscribe((isAdd) => {
-      this.addTaskMode = isAdd;
-    });
+    // this.taskService.addTaskMode.subscribe((isAdd) => {
+    //   this.addTaskMode = isAdd;
+    // });
   }
   deleteTask() {}
 
   saveTask() {
-    if (this.addTaskMode) {
-      this.taskService.addTask(this.currentTask, this.boardId, this.position).subscribe(() => {
-        this.taskService.cancelEditTask();
-        this.taskService.togggleAddTaskMode(false);
-      });
-    } else {
-      this.taskService.updateTask(this.currentTask, this.boardId, this.position).subscribe(() => {
-        this.taskService.cancelEditTask();
-      });
-    }
+    //   if (this.addTaskMode) {
+    //     this.taskService.addTask(this.currentTask, this.boardId, this.position).subscribe(() => {
+    //       this.taskService.cancelEditTask();
+    //       this.taskService.togggleAddTaskMode(false);
+    //     });
+    //   } else {
+    //     this.taskService.updateTask(this.currentTask, this.boardId, this.position).subscribe(() => {
+    //       this.taskService.cancelEditTask();
+    //     });
+    //   }
   }
 }
