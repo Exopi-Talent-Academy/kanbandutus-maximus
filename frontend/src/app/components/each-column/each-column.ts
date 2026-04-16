@@ -5,6 +5,7 @@ import { EachTask } from '../task/task';
 import { AddNewTask } from '../add-new-task/add-new-task';
 import { Tasks } from '../../services/tasks';
 import { columnNames } from '../../models/types';
+import { updateBoard } from '../../utils/helperFunction';
 
 @Component({
   selector: 'app-each-column',
@@ -33,7 +34,7 @@ export class EachColumn implements OnInit {
     console.log('Drag dropped on column:', this.columnId, 'from column:', fromColumnId);
     console.log('Task to move:', taskToMove);
 
-    this.updateBoard(taskToMove!, fromColumnId);
+    updateBoard(taskToMove!, fromColumnId, this.board, this.columnId);
 
     this.taskService.updateBoard(this.boardId.toString(), this.board).subscribe(() => {
       console.log('Board updated successfully after drag and drop');
@@ -44,27 +45,5 @@ export class EachColumn implements OnInit {
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
-  }
-
-  updateBoard(newTask: Task, fromColumnId: number) {
-    this.board.columns = this.board.columns.map((column) => {
-      if (column.id === fromColumnId) {
-        const newTasks = column.tasks.filter((task) => {
-          return task.id !== newTask.id;
-        });
-
-        return {
-          ...column,
-          tasks: newTasks,
-        };
-      } else if (column.id === this.columnId) {
-        return {
-          ...column,
-          tasks: [...column.tasks, { ...newTask, column_id: column.id }],
-        };
-      } else {
-        return column;
-      }
-    });
   }
 }
