@@ -37,6 +37,7 @@ export class Board implements OnInit {
       this.boards.set(boards);
       this.currentBoard.set(boards[1] || null); // Set the current board to the first one, or null if no boards are available
       console.log('Board loaded:', boards[1]);
+      this.taskService.setCurrentBoard(boards[1] || null); // Update the current board in the service as well
     });
   }
 

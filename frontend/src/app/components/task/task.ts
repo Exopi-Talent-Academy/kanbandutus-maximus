@@ -32,6 +32,7 @@ export class EachTask implements OnInit {
       description: this.task.description,
       position: this.task.position,
     });
+    this.taskService.onTaskMove(this.task, this.fromColumnId);
   }
   onDragStart() {
     this.taskService.onTaskMove(this.task, this.fromColumnId);

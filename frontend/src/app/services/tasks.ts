@@ -20,6 +20,12 @@ export class Tasks {
   editTask = new Subject<Task | null>();
   addTaskMode = new BehaviorSubject<boolean>(false);
 
+  currentBoard: BoardType | null = null;
+
+  setCurrentBoard(board: BoardType | null): void {
+    this.currentBoard = board;
+  }
+
   onTaskMove(task: Task, beginColumnId: number): void {
     this.moveTask = task;
     this.fromColumnId = beginColumnId;
