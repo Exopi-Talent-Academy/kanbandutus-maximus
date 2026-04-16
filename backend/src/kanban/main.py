@@ -1,12 +1,21 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from .config import get_data_file, get_storage_backend
+from .config import get_data_file, get_storage_backend, get_cors_origins
 from .frontend import AngularMock, FrontendInterface
 from .service import KanbanService, NotFoundError
 from .storage import JsonStorage, SqlAlchemyStorage, StorageInterface
 
 app = FastAPI(title="Kanban API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=get_cors_origins(),
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def get_storage() -> StorageInterface:
