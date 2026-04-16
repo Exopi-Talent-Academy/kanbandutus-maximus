@@ -2,7 +2,7 @@
   <div class="each-column" (drop)="onDragDrop($event)" (dragover)="onDragOver($event)">
     <p class="font-bold mb-4 text-center">{{ columnName }}</p>
     @for (task of tasks; track task) {
-      <app-each-task [task]="task" [boardId]="boardId" [position]="position"></app-each-task>
+      <app-each-task [task]="task" [boardId]="boardId" [fromColumnId]="columnId"></app-each-task>
     }
     <app-add-new-task></app-add-new-task>
   </div>

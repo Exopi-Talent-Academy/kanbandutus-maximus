@@ -15,32 +15,25 @@ import { columnNames } from '../../models/types';
 export class EachColumn implements OnInit {
   @Input() tasks: Task[] = [];
   @Input() columnName!: string;
-  @Input() position!: number;
+  @Input() columnId!: number;
   @Input() boardId!: number;
   @Input() board!: BoardType;
+  @Input() position!: number;
 
   taskService = inject(Tasks);
 
-  ngOnInit() {
-    console.log('Column Name:', this.columnName);
-    for (const task of this.tasks) {
-      console.log(
-        'Task in EachColumn component:',
-        task.position,
-        'with column name:',
-        this.columnName,
-      );
-    }
-  }
+  ngOnInit() {}
 
   onDragDrop(event: DragEvent) {
     event.preventDefault();
 
-    this.taskService.moveTask.subscribe((movedTask) => {
-      if (movedTask) {
-        this.updateBoard(movedTask);
-      }
-    });
+    const taskToMove = this.taskService.moveTask;
+    const fromColumnId = this.taskService.fromColumnId;
+
+    console.log('Drag dropped on column:', this.columnId, 'from column:', fromColumnId);
+    console.log('Task to move:', taskToMove);
+
+    this.updateBoard(taskToMove!, fromColumnId);
 
     this.taskService.deleteBoard(this.boardId).subscribe(() => {
       console.log('Board deleted successfully after drag and drop');
@@ -56,20 +49,21 @@ export class EachColumn implements OnInit {
     event.preventDefault();
   }
 
-  updateBoard(newTask: Task) {
+  updateBoard(newTask: Task, fromColumnId: number) {
     this.board.columns = this.board.columns.map((column) => {
-      if (column.position === this.position && column.name === this.columnName) {
-        const newTasks = column.tasks.map((task) => {
-          if (task.id === newTask.id) {
-            return newTask;
-          } else {
-            return task;
-          }
+      if (column.id === fromColumnId) {
+        const newTasks = column.tasks.filter((task) => {
+          return task.id !== newTask.id;
         });
 
         return {
           ...column,
           tasks: newTasks,
+        };
+      } else if (column.id === this.columnId) {
+        return {
+          ...column,
+          tasks: [...column.tasks, { ...newTask, column_id: column.id }],
         };
       } else {
         return column;

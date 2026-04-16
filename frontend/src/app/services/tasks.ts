@@ -14,17 +14,20 @@ export class Tasks {
 
   updateAvailable = new Subject<boolean>();
 
-  moveTask = new Subject<Task | null>();
+  moveTask: Task | null = null;
+  fromColumnId = 0;
 
   editTask = new Subject<Task | null>();
   addTaskMode = new BehaviorSubject<boolean>(false);
 
-  onTaskMove(task: Task): void {
-    this.moveTask.next(task);
+  onTaskMove(task: Task, beginColumnId: number): void {
+    this.moveTask = task;
+    this.fromColumnId = beginColumnId;
   }
 
   onMoveTaskComplete(): void {
-    this.moveTask.next(null);
+    this.moveTask = null;
+    this.fromColumnId = 0;
   }
 
   private tasks: Task[] = [];

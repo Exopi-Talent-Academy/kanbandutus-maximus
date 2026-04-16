@@ -11,7 +11,7 @@ import { Task } from '../../models/types';
 export class EachTask implements OnInit {
   @Input() task!: Task;
   @Input() boardId!: number;
-  @Input() position!: number;
+  @Input() fromColumnId!: number;
 
   taskService = inject(Tasks);
 
@@ -33,7 +33,7 @@ export class EachTask implements OnInit {
       position: this.task.position,
     });
   }
-  onDragEnd(event: DragEvent) {
-    this.taskService.onTaskMove(this.task);
+  onDragStart() {
+    this.taskService.onTaskMove(this.task, this.fromColumnId);
   }
 }
