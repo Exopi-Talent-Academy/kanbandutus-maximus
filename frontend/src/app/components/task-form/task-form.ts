@@ -34,49 +34,20 @@ export class TaskForm implements OnInit {
       this.addTaskMode = isAdd;
     });
   }
-  deleteTask() {
-    let board = this.taskService.currentBoard;
-    const columnId = this.taskService.fromColumnId;
-
-    // let column = board?.columns.find((column) => column.id === columnId);
-    // const tasks = column?.tasks.filter((task) => task.id !== this.currentTask.id) ?? [];
-
-    // if (column) {
-    //   column = { ...column, tasks: tasks };
-    // }
-
-    board?.columns.map((col) => {
-      if (col.id === columnId) {
-        let tasks = col.tasks.filter((task) => task.id !== this.currentTask.id);
-        col.tasks = tasks;
-        return col;
-      } else {
-        return col;
-      }
-    });
-
-    this.taskService.updateBoard('2', board as BoardType).subscribe(() => {
-      console.log('Board deleted successfully after saving task');
-    });
-    this.taskService.cancelEditTask();
-  }
+  deleteTask() {}
 
   saveTask() {
-    const board = this.taskService.currentBoard;
-    const columnId = this.taskService.fromColumnId;
-    console.log('Saving task:', this.currentTask, 'to board:', board, 'in column:', columnId);
-
-    const myTask = board?.columns
-      .filter((col) => col.id === columnId)[0]
-      .tasks.filter((t) => t.id === this.currentTask.id)[0];
-    if (myTask) {
-      myTask.title = this.currentTask.title;
-      myTask.description = this.currentTask.description;
-      myTask.assignee = this.currentTask.assignee;
-    }
-    this.taskService.updateBoard('2', board as BoardType).subscribe(() => {
-      console.log('Board updated successfully after saving task');
+    this.taskService.updateTask(this.currentTask, this.currentTask.id).subscribe((res: Task) => {
+      console.log('successfully dragged and dropped....', res);
     });
+
+    this.taskService.cancelEditTask();
+  }
+  addTask() {
+    this.taskService.createTask(this.currentTask).subscribe((res: Task) => {
+      console.log('successfully dragged and dropped....', res);
+    });
+
     this.taskService.cancelEditTask();
   }
 }

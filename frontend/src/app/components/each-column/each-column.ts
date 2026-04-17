@@ -31,14 +31,11 @@ export class EachColumn implements OnInit {
     const taskToMove = this.taskService.moveTask;
     const fromColumnId = this.taskService.fromColumnId;
 
-    console.log('Drag dropped on column:', this.columnId, 'from column:', fromColumnId);
-    console.log('Task to move:', taskToMove);
-
-    updateBoard(taskToMove!, fromColumnId, this.board, this.columnId);
-
-    this.taskService.updateBoard(this.boardId.toString(), this.board).subscribe(() => {
-      console.log('Board updated successfully after drag and drop');
-    });
+    this.taskService
+      .updateTask({ ...taskToMove!, column_id: this.columnId }, taskToMove?.id!)
+      .subscribe((res: Task) => {
+        console.log('successfully dragged and dropped....', res);
+      });
 
     this.taskService.onMoveTaskComplete();
   }

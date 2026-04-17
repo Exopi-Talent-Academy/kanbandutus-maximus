@@ -3,8 +3,8 @@ import { BoardType, Task } from '../models/types';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-// const BASE_URL = 'http://localhost:8000/api';
-const BASE_URL = 'http://localhost:4201';
+const BASE_URL = 'http://localhost:8000/api';
+//const BASE_URL = 'http://localhost:4201';
 
 @Injectable({
   providedIn: 'root',
@@ -67,6 +67,16 @@ export class Tasks {
 
   updateBoard(boardId: string, board: BoardType): Observable<any> {
     return this.http.put(`${BASE_URL}/boards/${boardId}`, board);
+  }
+
+  updateTask(task: Task, task_id: number): Observable<Task> {
+    this.updateAvailable.next(true);
+    return this.http.put<Task>(`${BASE_URL}/tasks/${task_id}`, task);
+  }
+
+  createTask(task: Task) {
+    this.updateAvailable.next(true);
+    return this.http.post<Task>(`${BASE_URL}/tasks`, task);
   }
 
   showUpdateNotification() {

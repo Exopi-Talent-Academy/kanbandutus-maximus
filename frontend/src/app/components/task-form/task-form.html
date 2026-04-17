@@ -59,15 +59,18 @@
     </label>
   </div>
   <div class="flex justify-between mt-4">
-    <button class="bg-gray-200 p-2" (click)="saveTask()">
-      @if (addTaskMode) {
+    @if (addTaskMode) {
+      <button class="bg-gray-200 p-2" (click)="addTask()">
         <fa-icon [icon]="faAdd" class="mr-2" />
         Add Task
-      } @else {
+      </button>
+    } @else {
+      <button class="bg-gray-200 p-2" (click)="saveTask()">
         <fa-icon [icon]="faEdit" class="mr-2" />
         Update Task
-      }
-    </button>
+      </button>
+    }
+
     <!-- <button (click)="taskService.cancelEditTask()"><fa-icon [icon]="faClose" />Cancel</button> -->
     <button (click)="deleteTask()"><fa-icon [icon]="faTrash" class="mr-2" />Delete</button>
   </div>

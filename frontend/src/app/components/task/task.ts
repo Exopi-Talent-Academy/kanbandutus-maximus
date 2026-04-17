@@ -20,7 +20,9 @@ export class EachTask implements OnInit {
   }
 
   getAssignee() {
-    return `${this.task.assignee?.split(' ')[0][0].toUpperCase()}${this.task.assignee?.split(' ')[1][0].toUpperCase()}`;
+    return 'S';
+    //return this.task.assignee?.split('')[0].toUpperCase();
+    // return `${this.task.assignee?.split(' ')[0][0].toUpperCase()}${this.task.assignee?.split(' ')[1][0].toUpperCase()}`;
   }
 
   openTaskModal() {
