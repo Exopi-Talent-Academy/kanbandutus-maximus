@@ -70,12 +70,12 @@ export class Tasks {
   }
 
   updateTask(task: Task, task_id: number): Observable<Task> {
-    this.updateAvailable.next(true);
+    this.showUpdateNotification();
     return this.http.put<Task>(`${BASE_URL}/tasks/${task_id}`, task);
   }
 
   createTask(task: Task) {
-    this.updateAvailable.next(true);
+    this.showUpdateNotification();
     return this.http.post<Task>(`${BASE_URL}/tasks`, task);
   }
 

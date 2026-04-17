@@ -29,7 +29,6 @@ export class EachColumn implements OnInit {
     event.preventDefault();
 
     const taskToMove = this.taskService.moveTask;
-    const fromColumnId = this.taskService.fromColumnId;
 
     this.taskService
       .updateTask({ ...taskToMove!, column_id: this.columnId }, taskToMove?.id!)

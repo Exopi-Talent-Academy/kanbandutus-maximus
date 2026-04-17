@@ -33,6 +33,7 @@ export class TaskForm implements OnInit {
     this.taskService.addTaskMode.subscribe((isAdd) => {
       this.addTaskMode = isAdd;
     });
+    console.log('position', this.currentTask.column_id);
   }
   deleteTask() {}
 

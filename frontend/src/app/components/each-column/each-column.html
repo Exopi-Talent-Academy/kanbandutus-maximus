@@ -4,6 +4,6 @@
     @for (task of tasks; track task) {
       <app-each-task [task]="task" [boardId]="boardId" [fromColumnId]="columnId"></app-each-task>
     }
-    <app-add-new-task></app-add-new-task>
+    <app-add-new-task [columnId]="columnId"></app-add-new-task>
   </div>
 </app-container>
