@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from .config import get_data_file, get_storage_backend, get_cors_origins
-from .frontend import AngularMock, FrontendInterface
 from .service import KanbanService, NotFoundError
 from .storage import JsonStorage, SqlAlchemyStorage, StorageInterface
 
@@ -22,10 +21,6 @@ def get_storage() -> StorageInterface:
     if get_storage_backend() == "sqlite":
         return SqlAlchemyStorage()
     return JsonStorage(get_data_file())
-
-
-def get_frontend() -> FrontendInterface:
-    return AngularMock()
 
 
 service = KanbanService(get_storage())

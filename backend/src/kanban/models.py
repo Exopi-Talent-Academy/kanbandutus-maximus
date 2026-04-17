@@ -52,9 +52,6 @@ class KanbanData:
                 return task
         return None
 
-    def get_columns_by_board(self, board_id: int) -> list[Column]:
-        return [c for c in self.columns if c.board_id == board_id]
-
     def get_tasks_by_column(self, column_id: int) -> list[Task]:
         return [t for t in self.tasks if t.column_id == column_id]
 

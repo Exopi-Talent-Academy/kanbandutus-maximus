@@ -1,0 +1,90 @@
+================================================================================
+DEAD CODE REMOVAL
+================================================================================
+
+--------------------------------------------------------------------------------
+INTENTIONS
+--------------------------------------------------------------------------------
+| Aspect      | Description                                                    |
+|-------------|----------------------------------------------------------------|
+| Intention   | Remove confirmed dead code to improve code quality and          |
+|             | maintainability                                                |
+| Goal        | Reduce codebase complexity, remove unused code paths             |
+| Scope       | Identified dead code sections only                              |
+
+--------------------------------------------------------------------------------
+SCOPE
+--------------------------------------------------------------------------------
+Items marked for removal (verified non-blocking for commented-out endpoints):
+  1. frontend.py              - 26 lines, unused abstraction layer
+  2. main.py:get_frontend()   - 2 lines, defined but never called
+  3. schemas.py               - 33 lines, Core SQL Table() never imported
+  4. models.py:get_columns_by_board() - 2 lines, duplicate of service impl
+
+Excluded from scope:
+  - Alembic migration (explicitly preserved per user decision)
+
+--------------------------------------------------------------------------------
+PLAN
+--------------------------------------------------------------------------------
+1. Delete src/kanban/frontend.py
+   - FrontendInterface and AngularMock are defined but get_frontend() is
+     never called from main.py or any other module
+
+2. Edit src/kanban/main.py
+   - Remove lines 27-28 (get_frontend function)
+   - Remove "AngularMock, FrontendInterface" from import line 6
+
+3. Delete src/kanban/schemas.py
+   - Core SQL Table() definitions are never imported anywhere
+   - orm_models.py is the actual source of truth for SQLAlchemy
+
+4. Edit src/kanban/models.py
+   - Remove lines 55-56 (KanbanData.get_columns_by_board method)
+   - Service has equivalent implementation at service.py:52-57
+
+5. Create oc-changes/004_dead-code-removal.log (this file)
+   - Document removals with rationale
+   - Note preserved items
+
+6. Verify changes
+   - Run pytest to ensure nothing breaks
+   - Run ruff/flake8 to check for linting issues
+
+--------------------------------------------------------------------------------
+EXECUTION RESULTS
+--------------------------------------------------------------------------------
+
+EXECUTION DATE: 2026-04-17
+
+ACTIONS COMPLETED
+----------------
+1. [x] Deleted src/kanban/frontend.py
+2. [x] Edited src/kanban/main.py:
+      - Removed "from .frontend import AngularMock, FrontendInterface"
+      - Removed get_frontend() function definition
+3. [x] Deleted src/kanban/schemas.py
+4. [x] Edited src/kanban/models.py:
+      - Removed KanbanData.get_columns_by_board() method
+
+VERIFICATION RESULTS
+--------------------
+| Check                          | Result |
+|--------------------------------|--------|
+| pytest tests                   | 42 passed |
+| Import test (main.py)          | SUCCESS |
+
+FILES REMOVED
+-------------
+- src/kanban/frontend.py (26 lines)
+- src/kanban/schemas.py (33 lines)
+
+LINES REMOVED FROM EXISTING FILES
+---------------------------------
+- src/kanban/main.py: 4 lines (1 import + 2 function + blank line)
+- src/kanban/models.py: 2 lines (method)
+
+PRESERVED (OUT OF SCOPE)
+------------------------
+- alembic/ directory and all contents
+
