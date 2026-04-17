@@ -314,6 +314,9 @@ class SqlAlchemyStorage(StorageInterface):
     def __init__(self):
         init_db()
 
+    def _session(self):
+        return SessionLocal()
+
     def _to_domain_board(self, board: BoardORM) -> Board:
         domain_columns: list[Column] = []
         for column in sorted(board.columns, key=lambda c: c.position):
