@@ -55,6 +55,7 @@ export class App implements OnInit {
 
   cancelEdit() {
     this.taskService.cancelEditTask();
+    this.taskService.togggleAddTaskMode(false);
   }
 
   isAddTask() {

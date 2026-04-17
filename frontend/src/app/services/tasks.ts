@@ -83,6 +83,6 @@ export class Tasks {
     this.updateAvailable.next(true);
     setTimeout(() => {
       this.updateAvailable.next(false);
-    }, 3000);
+    }, 1000);
   }
 }

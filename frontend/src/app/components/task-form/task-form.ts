@@ -50,5 +50,6 @@ export class TaskForm implements OnInit {
     });
 
     this.taskService.cancelEditTask();
+    this.taskService.togggleAddTaskMode(false);
   }
 }

@@ -72,6 +72,8 @@
     }
 
     <!-- <button (click)="taskService.cancelEditTask()"><fa-icon [icon]="faClose" />Cancel</button> -->
-    <button (click)="deleteTask()"><fa-icon [icon]="faTrash" class="mr-2" />Delete</button>
+    @if (!addTaskMode) {
+      <button (click)="deleteTask()"><fa-icon [icon]="faTrash" class="mr-2" />Delete</button>
+    }
   </div>
 </app-container>
