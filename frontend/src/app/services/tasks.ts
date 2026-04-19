@@ -81,6 +81,11 @@ export class Tasks {
     return this.http.post<Task>(`${BASE_URL}/tasks`, task);
   }
 
+  deleteTask(taskId: number) {
+    this.showUpdateNotification();
+    return this.http.delete<Task>(`${BASE_URL}/tasks/${taskId}`);
+  }
+
   showUpdateNotification() {
     this.updateAvailable.next(true);
     setTimeout(() => {

@@ -35,7 +35,12 @@ export class TaskForm implements OnInit {
     });
     console.log('position', this.currentTask.column_id);
   }
-  deleteTask() {}
+  deleteTask() {
+    this.taskService.deleteTask(this.currentTask.id).subscribe((res: Task) => {
+      console.log('successfully deleted a task....', res);
+      this.taskService.cancelEditTask();
+    });
+  }
 
   saveTask() {
     this.taskService.updateTask(this.currentTask, this.currentTask.id).subscribe((res: Task) => {
