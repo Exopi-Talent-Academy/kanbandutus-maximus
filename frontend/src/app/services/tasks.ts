@@ -71,8 +71,9 @@ export class Tasks {
   }
 
   updateTask(task: Task, task_id: number): Observable<Task> {
-    this.showUpdateNotification();
-    return this.http.put<Task>(`${BASE_URL}/tasks/${task_id}`, task);
+    const response = this.http.put<Task>(`${BASE_URL}/tasks/${task_id}`, task);
+    // this.showUpdateNotification();
+    return response;
   }
 
   createTask(task: Task) {
@@ -84,6 +85,6 @@ export class Tasks {
     this.updateAvailable.next(true);
     setTimeout(() => {
       this.updateAvailable.next(false);
-    }, 1000);
+    }, 3000);
   }
 }

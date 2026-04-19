@@ -32,9 +32,10 @@ export class EachRow {
       )
       .subscribe((res: Task) => {
         console.log('successfully dragged and dropped....', res);
+        this.taskService.onMoveTaskComplete();
+        console.log('moved....', taskToMove?.position, this.task.position);
+        this.taskService.updateAvailable.next(true);
       });
-
-    this.taskService.onMoveTaskComplete();
   }
 
   onDragOver(event: DragEvent) {

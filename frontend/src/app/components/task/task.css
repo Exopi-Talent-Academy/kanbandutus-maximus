@@ -26,4 +26,18 @@
     .task:hover {
         background-color: rgb(251, 250, 250);
     }
+    .task-container {
+        background-color: rgb(243, 243, 243);
+        height: 18px;
+        box-shadow: none;
+        cursor:default;
+        pointer-events: none;
+    }
+    .task.task-container:hover {
+          background-color: rgb(243, 243, 243);
+
+    }
+    .task-container span {
+        display:none;
+    }
 }

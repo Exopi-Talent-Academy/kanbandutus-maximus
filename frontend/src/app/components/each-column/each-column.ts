@@ -1,10 +1,19 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  inject,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { Container } from '../../shared/container/container';
 import { BoardType, Task } from '../../models/types';
 
 import { AddNewTask } from '../add-new-task/add-new-task';
 
 import { EachRow } from '../each-row/each-row';
+import { Tasks } from '../../services/tasks';
 
 @Component({
   selector: 'app-each-column',
@@ -20,5 +29,25 @@ export class EachColumn implements OnInit {
   @Input() board!: BoardType;
   @Input() position!: number;
 
-  ngOnInit() {}
+  taskService = inject(Tasks);
+
+  ngOnInit() {
+    this.updateBoard();
+    this.taskService.updateAvailable.subscribe((res) => {
+      console.warn('updated board......');
+      this.updateBoard();
+    });
+  }
+
+  updateBoard() {
+    const task: Task = {
+      id: 0,
+      title: '',
+      position: 1111,
+      description: '',
+      assignee: '',
+      column_id: this.columnId,
+    };
+    this.tasks.push(task);
+  }
 }

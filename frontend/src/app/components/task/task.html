@@ -1,6 +1,8 @@
 <div
   class="task cursor-pointer hover:bg-gray-400"
-  draggable="true"
+  [draggable]="task.position !== 1111"
+  [attr.disabled]="task.position === 1111"
+  [class.task-container]="task.position === 1111"
   (dragstart)="onDragStart()"
   (click)="openTaskModal()"
 >
