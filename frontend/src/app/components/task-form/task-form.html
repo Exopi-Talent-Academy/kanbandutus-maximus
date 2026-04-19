@@ -11,6 +11,7 @@
           class="font-normal"
           type="text"
           placeholder="Task Title"
+          maxlength="20"
           [(ngModel)]="currentTask.title"
         />
       </label>
@@ -43,7 +44,6 @@
           type="number"
           placeholder="Task Position"
           [(ngModel)]="currentTask.position"
-          [max]="3"
           min="0"
         />
       </label>

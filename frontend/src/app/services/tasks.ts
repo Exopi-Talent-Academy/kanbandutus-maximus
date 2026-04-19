@@ -3,8 +3,9 @@ import { BoardType, Task } from '../models/types';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-const BASE_URL = 'http://localhost:8000/api';
+// const BASE_URL = 'http://localhost:8000/api';
 //const BASE_URL = 'http://localhost:4201';
+const BASE_URL = 'http://127.0.0.1:8000/api';
 
 @Injectable({
   providedIn: 'root',

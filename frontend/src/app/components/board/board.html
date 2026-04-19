@@ -2,6 +2,7 @@
   <div class="board">
     @for (column of currentBoard()?.columns; track column.id) {
       <app-each-column
+        class="each-column"
         [columnName]="column.name"
         [tasks]="column.tasks"
         [position]="column.position"

@@ -11,4 +11,7 @@
             flex-grow: 1;
         }
     }
+    .each-column {
+        flex-basis: 25%;
+    }
 }
