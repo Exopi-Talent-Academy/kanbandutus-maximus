@@ -6,6 +6,7 @@ src/kanban.egg-info/PKG-INFO
 kanban.egg-info/*
 *.egg-info/
 *~
+kanban.db
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
