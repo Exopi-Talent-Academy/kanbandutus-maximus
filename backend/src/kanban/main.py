@@ -180,13 +180,13 @@ def update_task(task_id: int, task: TaskUpdate):
         raise HTTPException(status_code=404, detail=str(e))
 
 ## Deletes a task.
-# @app.delete("/api/tasks/{task_id}")
-# def delete_task(task_id: int):
-#     try:
-#         service.delete_task(task_id)
-#         return {"message": "Task deleted"}
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+@app.delete("/api/tasks/{task_id}", status_code=200)
+def delete_task(task_id: int):
+    try:
+        service.delete_task(task_id)
+        return {"message": "Task deleted"}
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 ## Gets a task. Probably don't use this, use Get Board instead.
 # @app.get("/api/tasks/{task_id}")
