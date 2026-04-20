@@ -38,10 +38,9 @@ class KanbanService:
         return result
 
     def delete_board(self, board_id: int) -> None:
-        board = self.storage.get_board(board_id)
-        if not board:
+        deleted = self.storage.delete_board(board_id)
+        if not deleted:
             raise NotFoundError("Board", board_id)
-        self.storage.delete_board(board_id)
 
     def get_column(self, column_id: int) -> Column:
         column = self.storage.get_column(column_id)
@@ -75,10 +74,9 @@ class KanbanService:
         return result
 
     def delete_column(self, column_id: int) -> None:
-        column = self.storage.get_column(column_id)
-        if not column:
+        deleted = self.storage.delete_column(column_id)
+        if not deleted:
             raise NotFoundError("Column", column_id)
-        self.storage.delete_column(column_id)
 
     def get_task(self, task_id: int) -> Task:
         task = self.storage.get_task(task_id)
@@ -115,7 +113,6 @@ class KanbanService:
         return result
 
     def delete_task(self, task_id: int) -> None:
-        task = self.storage.get_task(task_id)
-        if not task:
+        deleted = self.storage.delete_task(task_id)
+        if not deleted:
             raise NotFoundError("Task", task_id)
-        self.storage.delete_task(task_id)
