@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BoardType, Task } from '../models/types';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 // const BASE_URL = 'http://localhost:8000/api';
@@ -71,19 +71,21 @@ export class Tasks {
   }
 
   updateTask(task: Task, task_id: number): Observable<Task> {
-    const response = this.http.put<Task>(`${BASE_URL}/tasks/${task_id}`, task);
-    // this.showUpdateNotification();
-    return response;
+    return this.http
+      .put<Task>(`${BASE_URL}/tasks/${task_id}`, task)
+      .pipe(tap(() => this.showUpdateNotification()));
   }
 
   createTask(task: Task) {
-    this.showUpdateNotification();
-    return this.http.post<Task>(`${BASE_URL}/tasks`, task);
+    return this.http
+      .post<Task>(`${BASE_URL}/tasks`, task)
+      .pipe(tap(() => this.showUpdateNotification()));
   }
 
   deleteTask(taskId: number) {
-    this.showUpdateNotification();
-    return this.http.delete<Task>(`${BASE_URL}/tasks/${taskId}`);
+    return this.http
+      .delete<Task>(`${BASE_URL}/tasks/${taskId}`)
+      .pipe(tap(() => this.showUpdateNotification()));
   }
 
   showUpdateNotification() {

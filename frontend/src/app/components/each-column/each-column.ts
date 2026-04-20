@@ -1,12 +1,4 @@
-import {
-  AfterContentInit,
-  AfterViewChecked,
-  AfterViewInit,
-  Component,
-  inject,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { Container } from '../../shared/container/container';
 import { BoardType, Task } from '../../models/types';
 
@@ -21,7 +13,7 @@ import { Tasks } from '../../services/tasks';
   templateUrl: './each-column.html',
   styleUrl: './each-column.css',
 })
-export class EachColumn implements OnInit {
+export class EachColumn implements OnInit, OnChanges {
   @Input() tasks: Task[] = [];
   @Input() columnName!: string;
   @Input() columnId!: number;
@@ -29,14 +21,21 @@ export class EachColumn implements OnInit {
   @Input() board!: BoardType;
   @Input() position!: number;
 
+  updatedTasks = signal<Task[]>([]);
+
   taskService = inject(Tasks);
 
   ngOnInit() {
     this.updateBoard();
     this.taskService.updateAvailable.subscribe((res) => {
-      console.warn('updated board......');
       this.updateBoard();
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tasks'] || changes['columnId']) {
+      this.updateBoard();
+    }
   }
 
   updateBoard() {
@@ -48,6 +47,6 @@ export class EachColumn implements OnInit {
       assignee: '',
       column_id: this.columnId,
     };
-    this.tasks.push(task);
+    this.updatedTasks.set([...this.tasks, task]);
   }
 }
