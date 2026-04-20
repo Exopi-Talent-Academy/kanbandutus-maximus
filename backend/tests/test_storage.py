@@ -1,3 +1,6 @@
+import importlib
+import json
+
 import pytest
 
 from src.kanban.models import Board, Column, Task
@@ -93,3 +96,67 @@ def test_update_task(storage):
     assert task is not None
     assert task.title == "Updated Task"
     assert task.column_id == 2
+
+
+def test_sqlite_db_is_created_and_seeded_from_json(tmp_path, monkeypatch):
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    data_file = data_dir / "kanban.json"
+    db_file = data_dir / "kanban.db"
+
+    sample_data = {
+        "boards": [
+            {
+                "id": 1,
+                "name": "Seed Board",
+                "columns": [
+                    {
+                        "id": 1,
+                        "name": "To Do",
+                        "position": 0,
+                        "board_id": 1,
+                        "tasks": [
+                            {
+                                "id": 1,
+                                "title": "Seed Task",
+                                "description": "Loaded from JSON",
+                                "assignee": "",
+                                "column_id": 1,
+                                "position": 0,
+                            }
+                        ],
+                    }
+                ],
+            }
+        ]
+    }
+    data_file.write_text(json.dumps(sample_data), encoding="utf-8")
+
+    monkeypatch.setenv("KANBAN_DATA_DIR", str(data_dir))
+    monkeypatch.setenv("KANBAN_DATABASE_URL", f"sqlite:///{db_file.as_posix()}")
+    monkeypatch.setenv("KANBAN_STORAGE_BACKEND", "sqlite")
+
+    import src.kanban.config as config_module
+    import src.kanban.db as db_module
+    import src.kanban.storage as storage_module
+
+    importlib.reload(config_module)
+    importlib.reload(db_module)
+    importlib.reload(storage_module)
+
+    storage = storage_module.SqlAlchemyStorage()
+    board = storage.get_board(1)
+    task = storage.get_task(1)
+
+    assert db_file.exists()
+    assert board is not None
+    assert board.name == "Seed Board"
+    assert task is not None
+    assert task.title == "Seed Task"
+
+    monkeypatch.delenv("KANBAN_DATA_DIR", raising=False)
+    monkeypatch.delenv("KANBAN_DATABASE_URL", raising=False)
+    monkeypatch.delenv("KANBAN_STORAGE_BACKEND", raising=False)
+    importlib.reload(config_module)
+    importlib.reload(db_module)
+    importlib.reload(storage_module)
