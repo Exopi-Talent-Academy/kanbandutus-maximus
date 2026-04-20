@@ -6,6 +6,7 @@ from typing import Optional
 from sqlalchemy import delete, select
 from sqlalchemy.orm import selectinload
 
+from .config import get_data_file, get_database_url
 from .db import SessionLocal, init_db
 from .models import Board, Column, KanbanData, Task
 from .orm_models import BoardORM, ColumnORM, TaskORM
@@ -312,7 +313,31 @@ class JsonStorage(StorageInterface):
 
 class SqlAlchemyStorage(StorageInterface):
     def __init__(self):
+        should_seed = self._should_seed_from_json()
         init_db()
+        if should_seed:
+            self._seed_from_default_json()
+
+    def _should_seed_from_json(self) -> bool:
+        database_url = get_database_url()
+        if not database_url.startswith("sqlite:///"):
+            return False
+
+        sqlite_path = database_url.replace("sqlite:///", "", 1)
+        return sqlite_path != ":memory:" and not Path(sqlite_path).exists()
+
+    def _seed_from_default_json(self) -> None:
+        data_file = get_data_file()
+        if not data_file.exists():
+            return
+
+        with SessionLocal() as session:
+            has_existing_board = session.scalar(select(BoardORM.id).limit(1)) is not None
+
+        if has_existing_board:
+            return
+
+        self.save(JsonStorage(data_file).load())
 
     def _session(self):
         return SessionLocal()
