@@ -1,10 +1,6 @@
 <app-container>
   <div class="task-form relative flex flex-col gap-2">
     <div class="flex gap-4">
-      <label class="id font-bold"
-        >ID:
-        <input class="font-normal" type="text" placeholder="Task ID" [(ngModel)]="currentTask.id" />
-      </label>
       <label class="title font-bold"
         >Title:
         <input
@@ -18,7 +14,7 @@
     </div>
     <label class="description font-bold"
       >Description:
-      <input
+      <text
         class="font-normal"
         type="text"
         placeholder="Task Description"
@@ -26,28 +22,6 @@
       />
     </label>
 
-    <div class="flex gap-4">
-      <label class="status font-bold"
-        >Column_Id:
-        <input
-          class="font-normal"
-          type="number"
-          placeholder="Task Column ID"
-          [(ngModel)]="currentTask.column_id"
-        />
-      </label>
-
-      <label class="status font-bold"
-        >Position:
-        <input
-          class="font-normal"
-          type="number"
-          placeholder="Task Position"
-          [(ngModel)]="currentTask.position"
-          min="0"
-        />
-      </label>
-    </div>
     <label class="assignee font-bold"
       >Assignee:
       <input
