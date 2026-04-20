@@ -1,8 +1,8 @@
 <app-container>
-  <div class="each-column" (drop)="onDragDrop($event)" (dragover)="onDragOver($event)">
+  <div class="each-column">
     <p class="font-bold mb-4 text-center">{{ columnName }}</p>
-    @for (task of tasks; track task) {
-      <app-each-task [task]="task" [boardId]="boardId" [fromColumnId]="columnId"></app-each-task>
+    @for (task of updatedTasks(); track task.id) {
+      <app-each-row [task]="task" [boardId]="boardId" [columnId]="columnId"> </app-each-row>
     }
     <app-add-new-task [columnId]="columnId"></app-add-new-task>
   </div>

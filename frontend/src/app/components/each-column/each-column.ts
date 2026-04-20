@@ -1,19 +1,19 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { Container } from '../../shared/container/container';
 import { BoardType, Task } from '../../models/types';
-import { EachTask } from '../task/task';
+
 import { AddNewTask } from '../add-new-task/add-new-task';
+
+import { EachRow } from '../each-row/each-row';
 import { Tasks } from '../../services/tasks';
-import { columnNames } from '../../models/types';
-import { updateBoard } from '../../utils/helperFunction';
 
 @Component({
   selector: 'app-each-column',
-  imports: [Container, EachTask, AddNewTask],
+  imports: [Container, AddNewTask, EachRow],
   templateUrl: './each-column.html',
   styleUrl: './each-column.css',
 })
-export class EachColumn implements OnInit {
+export class EachColumn implements OnInit, OnChanges {
   @Input() tasks: Task[] = [];
   @Input() columnName!: string;
   @Input() columnId!: number;
@@ -21,25 +21,32 @@ export class EachColumn implements OnInit {
   @Input() board!: BoardType;
   @Input() position!: number;
 
+  updatedTasks = signal<Task[]>([]);
+
   taskService = inject(Tasks);
 
-  ngOnInit() {}
-
-  onDragDrop(event: DragEvent) {
-    event.preventDefault();
-
-    const taskToMove = this.taskService.moveTask;
-
-    this.taskService
-      .updateTask({ ...taskToMove!, column_id: this.columnId }, taskToMove?.id!)
-      .subscribe((res: Task) => {
-        console.log('successfully dragged and dropped....', res);
-      });
-
-    this.taskService.onMoveTaskComplete();
+  ngOnInit() {
+    this.updateBoard();
+    this.taskService.updateAvailable.subscribe((res) => {
+      this.updateBoard();
+    });
   }
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tasks'] || changes['columnId']) {
+      this.updateBoard();
+    }
+  }
+
+  updateBoard() {
+    const task: Task = {
+      id: 0,
+      title: '',
+      position: 1111,
+      description: '',
+      assignee: '',
+      column_id: this.columnId,
+    };
+    this.updatedTasks.set([...this.tasks, task]);
   }
 }
