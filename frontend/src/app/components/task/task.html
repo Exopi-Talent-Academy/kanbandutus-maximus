@@ -1,4 +1,9 @@
-<div class="task cursor-pointer hover:bg-gray-400" (click)="openTaskModal()">
+<div
+  class="task cursor-pointer hover:bg-gray-400"
+  draggable="true"
+  (dragstart)="onDragStart()"
+  (click)="openTaskModal()"
+>
   <p>{{ task.title }}</p>
   <span>{{ getAssignee() }}</span>
 </div>

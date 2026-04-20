@@ -6,7 +6,7 @@ from typing import Optional
 class Board:
     id: int
     name: str
-    columns: list[int] = field(default_factory=list)
+    columns: list["Column"] = field(default_factory=list)
 
 
 @dataclass
@@ -15,6 +15,7 @@ class Column:
     name: str
     position: int
     board_id: int
+    tasks: list["Task"] = field(default_factory=list)
 
 
 @dataclass
@@ -23,6 +24,7 @@ class Task:
     title: str
     column_id: int
     description: str = ""
+    assignee: str = ""
     position: int = 0
 
 

@@ -1,0 +1,25 @@
+:host {
+    .task-form {
+        position: relative;
+        max-width: 300px;
+    }
+    input {
+        width: 100%;
+        padding: 3px;
+        margin: 4px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button {
+        background-color: rgb(145, 141, 141);
+        color: white;
+        padding: 3px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: rgb(205, 203, 203);
+    }
+}

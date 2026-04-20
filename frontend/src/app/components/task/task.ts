@@ -1,7 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { Container } from '../../shared/container/container';
 import { Tasks } from '../../services/tasks';
-import { TaskType } from '../../models/types';
 import { Task } from '../../models/types';
 
 @Component({
@@ -12,6 +10,8 @@ import { Task } from '../../models/types';
 })
 export class EachTask implements OnInit {
   @Input() task!: Task;
+  @Input() boardId!: number;
+  @Input() fromColumnId!: number;
 
   taskService = inject(Tasks);
 
@@ -25,11 +25,15 @@ export class EachTask implements OnInit {
 
   openTaskModal() {
     this.taskService.onEditTask({
-      id: '',
+      id: this.task.id,
       title: this.task.title,
-      status: TaskType.TODO,
+      column_id: this.task.column_id,
       assignee: this.task.assignee,
-      description: '',
+      description: this.task.description,
+      position: this.task.position,
     });
+  }
+  onDragStart() {
+    this.taskService.onTaskMove(this.task, this.fromColumnId);
   }
 }

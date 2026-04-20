@@ -7,8 +7,10 @@
 @if (isEditable()) {
   <div class="shadow">
     <div class="modal">
-      <h2>Edit Task</h2>
-      <button class="cursor-pointer" (click)="cancelEdit()">Cancel</button>
+      <div class="task-form relative">
+        <span class="close-button" (click)="cancelEdit()"><fa-icon [icon]="faClose" /></span>
+        <app-task-form [currentTask]="task()"></app-task-form>
+      </div>
     </div>
   </div>
 }
