@@ -195,3 +195,20 @@ def delete_task(task_id: int):
 #         return service.get_task(task_id)
 #     except NotFoundError as e:
 #         raise HTTPException(status_code=404, detail=str(e))
+
+
+
+##### ACCOUNTS #####
+
+## Get all accounts. 
+@app.get("/api/accounts")
+def get_accounts():
+    return service.get_all_accounts()
+
+## Get a specific account. 
+@app.get("/api/accounts/{account_id}")
+def get_account(account_id: int):
+    try:
+        return service.get_account(account_id)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))

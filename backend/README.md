@@ -57,6 +57,8 @@ pytest
 | POST | /api/tasks | Create task |
 | PUT | /api/tasks/{id} | Update task |
 | DELETE | /api/tasks/{id} | Delete task |
+| GET | /api/accounts | List all accounts |
+| GET | /api/accounts/{id} | Get account by ID |
 
 ## Configuration
 

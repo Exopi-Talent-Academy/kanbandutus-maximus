@@ -31,6 +31,24 @@ def test_get_task(storage):
     assert task.title == "Test Task"
 
 
+def test_load_accounts(storage):
+    data = storage.load()
+    assert len(data.accounts) == 2
+    assert data.accounts[0].username == "admin"
+
+
+def test_get_account(storage):
+    account = storage.get_account(1)
+    assert account is not None
+    assert account.username == "admin"
+    assert account.password_hash == "admin"
+
+
+def test_get_account_not_found(storage):
+    account = storage.get_account(999)
+    assert account is None
+
+
 def test_create_board(storage):
     board = storage.create_board("New Board")
     assert board.id >= 2
@@ -128,6 +146,13 @@ def test_sqlite_db_is_created_and_seeded_from_json(tmp_path, monkeypatch):
                     }
                 ],
             }
+        ],
+        "accounts": [
+            {
+                "id": 1,
+                "username": "seed-admin",
+                "password_hash": "seed-admin"
+            }
         ]
     }
     data_file.write_text(json.dumps(sample_data), encoding="utf-8")
@@ -147,12 +172,15 @@ def test_sqlite_db_is_created_and_seeded_from_json(tmp_path, monkeypatch):
     storage = storage_module.SqlAlchemyStorage()
     board = storage.get_board(1)
     task = storage.get_task(1)
+    account = storage.get_account(1)
 
     assert db_file.exists()
     assert board is not None
     assert board.name == "Seed Board"
     assert task is not None
     assert task.title == "Seed Task"
+    assert account is not None
+    assert account.username == "seed-admin"
 
     monkeypatch.delenv("KANBAN_DATA_DIR", raising=False)
     monkeypatch.delenv("KANBAN_DATABASE_URL", raising=False)
