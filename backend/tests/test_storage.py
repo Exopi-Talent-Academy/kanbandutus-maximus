@@ -88,7 +88,28 @@ def test_update_column(storage):
     column = storage.update_column(1, "Updated Column", 5)
     assert column is not None
     assert column.name == "Updated Column"
-    assert column.position == 5
+    assert column.position == 1
+
+    board = storage.get_board(1)
+    assert board is not None
+    assert [item.id for item in board.columns] == [2, 1]
+    assert [item.position for item in board.columns] == [0, 1]
+
+
+def test_update_column_reorders_positions_within_board(storage):
+    third_column = storage.create_column("Review", 2, 1)
+
+    assert third_column is not None
+
+    updated_column = storage.update_column(third_column.id, "Review", 0)
+
+    assert updated_column is not None
+    assert updated_column.position == 0
+
+    board = storage.get_board(1)
+    assert board is not None
+    assert [item.id for item in board.columns] == [third_column.id, 1, 2]
+    assert [item.position for item in board.columns] == [0, 1, 2]
 
 
 def test_update_task(storage):

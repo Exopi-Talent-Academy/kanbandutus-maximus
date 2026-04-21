@@ -83,6 +83,26 @@ def _resequence_tasks(tasks: list) -> None:
         task.position = index
 
 
+def _sorted_columns(columns: list) -> list:
+    return sorted(columns, key=lambda column: (column.position, column.id))
+
+
+def _clamp_column_position(position: int, column_count: int) -> int:
+    return max(0, min(position, column_count))
+
+
+def _resequence_columns(columns: list) -> None:
+    for index, column in enumerate(columns):
+        column.position = index
+
+
+def _reorder_column(column, board_columns: list, target_position: int) -> None:
+    other_columns = [item for item in board_columns if item.id != column.id]
+    insert_at = _clamp_column_position(target_position, len(other_columns))
+    other_columns.insert(insert_at, column)
+    _resequence_columns(other_columns)
+
+
 def _reorder_task(task, source_tasks: list, target_tasks: list, target_column_id: int, target_position: int) -> None:
     source_without_task = [item for item in source_tasks if item.id != task.id]
 
@@ -283,8 +303,9 @@ class JsonStorage(StorageInterface):
         data = self.load()
         column = data.get_column(column_id)
         if column:
+            board_columns = _sorted_columns([item for item in data.columns if item.board_id == column.board_id])
             column.name = name
-            column.position = position
+            _reorder_column(column, board_columns, position)
             self.save(data)
         return column
 
@@ -566,9 +587,16 @@ class SqlAlchemyStorage(StorageInterface):
                 column = session.get(ColumnORM, column_id)
                 if not column:
                     return None
+                board_columns = list(
+                    session.execute(
+                        select(ColumnORM)
+                        .where(ColumnORM.board_id == column.board_id)
+                        .order_by(ColumnORM.position, ColumnORM.id)
+                    ).scalars()
+                )
                 column.name = name
-                column.position = position
                 board_id = column.board_id
+                _reorder_column(column, board_columns, position)
 
             refreshed = (
                 session.execute(select(ColumnORM).where(ColumnORM.id == column_id).options(selectinload(ColumnORM.tasks)))
