@@ -44,3 +44,13 @@ class TaskORM(Base):
     column_id: Mapped[int] = mapped_column(ForeignKey("columns.id", ondelete="CASCADE"), nullable=False, index=True)
 
     column: Mapped["ColumnORM"] = relationship(back_populates="tasks")
+
+
+class AccountORM(Base):
+    __tablename__ = "accounts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    username: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
+    password_hash: Mapped[str] = mapped_column(String(128), nullable=False)
+    
+    

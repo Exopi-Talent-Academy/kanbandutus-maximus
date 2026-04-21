@@ -1,6 +1,6 @@
 from typing import Optional
 
-from .models import Board, Column, Task
+from .models import Account, Board, Column, Task
 from .storage import StorageInterface
 
 
@@ -24,6 +24,16 @@ class KanbanService:
     def get_all_boards(self) -> list[Board]:
         data = self.storage.load()
         return data.boards
+    
+    def get_all_accounts(self) -> list[Account]:
+        data = self.storage.load()
+        return data.accounts
+    
+    def get_account(self, account_id: int) -> Account:
+        account = self.storage.get_account(account_id)
+        if not account:
+            raise NotFoundError("Account", account_id)
+        return account
 
     def create_board(self, name: str) -> Board:
         return self.storage.create_board(name)
