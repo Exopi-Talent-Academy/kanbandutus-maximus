@@ -125,30 +125,30 @@ def get_board(board_id: int):
 
 ##### COLUMNS #####
 
-## Create new Column.
-# @app.post("/api/columns")
-# def create_column(column: ColumnCreate):
-#     try:
-#         return service.create_column(column.name, column.position, column.board_id)
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+# Create new Column.
+@app.post("/api/columns")
+def create_column(column: ColumnCreate):
+    try:
+        return service.create_column(column.name, column.position, column.board_id)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
-## Updates Column data (such as name, position)
-# @app.put("/api/columns/{column_id}")
-# def update_column(column_id: int, column: ColumnUpdate):
-#     try:
-#         return service.update_column(column_id, column.name, column.position)
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+# Updates Column data (such as name, position)
+@app.put("/api/columns/{column_id}")
+def update_column(column_id: int, column: ColumnUpdate):
+    try:
+        return service.update_column(column_id, column.name, column.position)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
-## Deletes a Column.  
-# @app.delete("/api/columns/{column_id}")
-# def delete_column(column_id: int):
-#     try:
-#         service.delete_column(column_id)
-#         return {"message": "Column deleted"}
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+# Deletes a Column.  
+@app.delete("/api/columns/{column_id}")
+def delete_column(column_id: int):
+    try:
+        service.delete_column(column_id)
+        return {"message": "Column deleted"}
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 
