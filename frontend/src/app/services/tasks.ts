@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BoardType, Task } from '../models/types';
+import { BoardType, Task, User } from '../models/types';
 import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -22,6 +22,16 @@ export class Tasks {
   addTaskMode = new BehaviorSubject<boolean>(false);
 
   currentBoard: BoardType | null = null;
+
+  currentUser = new Subject<User>();
+
+  setUser(user: User) {
+    this.currentUser.next(user);
+  }
+
+  getUsers() {
+    return this.http.get<User[]>(`${BASE_URL}/accounts`);
+  }
 
   setCurrentBoard(board: BoardType | null): void {
     this.currentBoard = board;
