@@ -60,6 +60,9 @@ def test_create_column(storage):
     assert column is not None
     assert column.name == "In Progress"
     assert column.position == 2
+    board = storage.get_board(1)
+    assert board is not None
+    assert any(existing_column.id == column.id for existing_column in board.columns)
 
 
 def test_create_column_invalid_board(storage):
@@ -88,6 +91,12 @@ def test_delete_column(storage):
     result = storage.delete_column(1)
     assert result is True
     assert storage.get_column(1) is None
+    assert storage.get_task(1) is None
+
+
+def test_delete_column_invalid_id(storage):
+    result = storage.delete_column(999)
+    assert result is False
 
 
 def test_delete_task(storage):
@@ -128,6 +137,10 @@ def test_update_column_reorders_positions_within_board(storage):
     assert board is not None
     assert [item.id for item in board.columns] == [third_column.id, 1, 2]
     assert [item.position for item in board.columns] == [0, 1, 2]
+
+def test_update_column_invalid_id(storage):
+    column = storage.update_column(999, "Updated Column", 5)
+    assert column is None
 
 
 def test_update_task(storage):
