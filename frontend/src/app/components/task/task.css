@@ -1,0 +1,43 @@
+:host {
+    .task {
+        background-color: #fff;
+        padding: 3px;
+        border-radius: 3px;
+        margin-bottom: 6px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        width:100%;
+
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+
+        span {
+            background-color: rgb(201, 198, 198);
+            color:#fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+        }
+    } 
+    .task:hover {
+        background-color: rgb(251, 250, 250);
+    }
+    .task-container {
+        background-color: rgb(243, 243, 243);
+        height: 18px;
+        box-shadow: none;
+        cursor:default;
+        pointer-events: none;
+    }
+    .task.task-container:hover {
+          background-color: rgb(243, 243, 243);
+
+    }
+    .task-container span {
+        display:none;
+    }
+}

@@ -1,0 +1,53 @@
+<app-container>
+  <div class="task-form relative flex flex-col gap-2">
+    <div class="flex gap-4">
+      <label class="title font-bold"
+        >Title:
+        <input
+          class="font-normal"
+          type="text"
+          placeholder="Task Title"
+          maxlength="20"
+          [(ngModel)]="currentTask.title"
+        />
+      </label>
+    </div>
+    <label class="description font-bold"
+      >Description:
+      <input
+        class="font-normal"
+        type="text"
+        placeholder="Task Description"
+        [(ngModel)]="currentTask.description"
+      />
+    </label>
+
+    <label class="assignee font-bold"
+      >Assignee:
+      <input
+        class="font-normal"
+        type="text"
+        placeholder="Task Assignee"
+        [(ngModel)]="currentTask.assignee"
+      />
+    </label>
+  </div>
+  <div class="flex justify-between mt-4">
+    @if (addTaskMode) {
+      <button class="bg-gray-200 p-2" (click)="addTask()">
+        <fa-icon [icon]="faAdd" class="mr-2" />
+        Add Task
+      </button>
+    } @else {
+      <button class="bg-gray-200 p-2" (click)="saveTask()">
+        <fa-icon [icon]="faEdit" class="mr-2" />
+        Update Task
+      </button>
+    }
+
+    <!-- <button (click)="taskService.cancelEditTask()"><fa-icon [icon]="faClose" />Cancel</button> -->
+    @if (!addTaskMode) {
+      <button (click)="deleteTask()"><fa-icon [icon]="faTrash" class="mr-2" />Delete</button>
+    }
+  </div>
+</app-container>

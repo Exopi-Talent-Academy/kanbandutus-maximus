@@ -1,0 +1,213 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "a title",
+      "views": 100
+    },
+    {
+      "id": "2",
+      "title": "another title",
+      "views": 200
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "text": "a comment about post 1",
+      "postId": "1"
+    },
+    {
+      "id": "2",
+      "text": "another comment about post 1",
+      "postId": "1"
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Task 1",
+      "column_id": 3,
+      "assignee": "John Doe",
+      "description": "Description for Task 1",
+      "position": 0
+    },
+    {
+      "id": "3",
+      "title": "Task 3",
+      "column_id": 3,
+      "assignee": "Jane Smith",
+      "description": "Description for Task 3",
+      "position": 3
+    },
+    {
+      "id": "4",
+      "position": 2
+    },
+    {
+      "id": "5",
+      "title": "Task 5",
+      "column_id": 3,
+      "assignee": "Bob Brown",
+      "description": "Description for Task 51",
+      "position": 3
+    },
+    {
+      "id": "6",
+      "title": "Task 6",
+      "column_id": 3,
+      "assignee": "Diana Evans",
+      "description": "Description for Task 6",
+      "position": 3
+    },
+    {
+      "id": "3RYmr1T9jZg",
+      "title": "Title 7",
+      "column_id": 0,
+      "assignee": "Som Poudel",
+      "description": "Description for title 7",
+      "position": 0
+    },
+    {
+      "id": "J0A80xVcqVo",
+      "title": "vcbvcb",
+      "column_id": 1,
+      "assignee": "vcbvcb fgfdgd",
+      "description": "vbvcbvc",
+      "position": 1
+    }
+  ],
+  "boards": [
+    {
+      "id": "1",
+      "name": "My Board",
+      "columns": [
+        {
+          "id": 1,
+          "name": "To Do",
+          "position": 0,
+          "board_id": 1,
+          "tasks": [
+            {
+              "id": 1,
+              "title": "Welcome Task",
+              "column_id": 1,
+              "description": "Drag me to move",
+              "assignee": "dsada sda",
+              "position": 0
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "In Progress",
+          "position": 1,
+          "board_id": 1,
+          "tasks": []
+        },
+        {
+          "id": 3,
+          "name": "Done",
+          "position": 2,
+          "board_id": 1,
+          "tasks": []
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Musique",
+      "columns": [
+        {
+          "id": 4,
+          "name": "To Do",
+          "position": 0,
+          "board_id": 2,
+          "tasks": []
+        },
+        {
+          "id": 5,
+          "name": "Plan",
+          "position": 1,
+          "board_id": 2,
+          "tasks": []
+        },
+        {
+          "id": 6,
+          "name": "In Progress",
+          "position": 2,
+          "board_id": 2,
+          "tasks": []
+        },
+        {
+          "id": 7,
+          "name": "Done",
+          "position": 3,
+          "board_id": 2,
+          "tasks": [
+            {
+              "id": 8,
+              "title": "Full Rush",
+              "column_id": 7,
+              "description": "It's not the B-site.",
+              "assignee": "Leeroy Jenkins",
+              "position": 0
+            },
+            {
+              "id": 2,
+              "title": "Welcome to the Parade",
+              "column_id": 7,
+              "description": "Drag me to move",
+              "assignee": "Lenny dsadas",
+              "position": 0
+            },
+            {
+              "id": 4,
+              "title": "Become famous",
+              "column_id": 7,
+              "description": "Through the fanciest of music",
+              "assignee": "Hayden ddd",
+              "position": 0
+            },
+            {
+              "id": 5,
+              "title": "Ein Klein Natchmusik",
+              "column_id": 7,
+              "description": "Legendary track, innit?",
+              "assignee": "Mozart ssss",
+              "position": 1
+            },
+            {
+              "id": 7,
+              "title": "Spanish Suite",
+              "column_id": 7,
+              "description": "Nice guitar.",
+              "assignee": "Rodrigo ssss",
+              "position": 0
+            },
+            {
+              "id": 6,
+              "title": "Symphony Nr. 7",
+              "column_id": 7,
+              "description": "Very dramatic.",
+              "assignee": "Beethoven ssss",
+              "position": 2
+            },
+            {
+              "id": 3,
+              "title": "And 1 another one",
+              "column_id": 7,
+              "assignee": "Wolf dsdsa1",
+              "description": "... bites the dust!1",
+              "position": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

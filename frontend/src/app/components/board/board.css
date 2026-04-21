@@ -1,0 +1,17 @@
+:host {
+    .board {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        height: 70vh;
+        padding: 12px;
+        border-radius: 12px;
+        margin: 12px;
+        app-each-column {
+            flex-grow: 1;
+        }
+    }
+    .each-column {
+        flex-basis: 25%;
+    }
+}
