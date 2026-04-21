@@ -74,6 +74,36 @@ class StorageInterface(ABC):
         pass
 
 
+def _sorted_tasks(tasks: list) -> list:
+    return sorted(tasks, key=lambda task: (task.position, task.id))
+
+
+def _clamp_task_position(position: int, task_count: int) -> int:
+    return max(0, min(position, task_count))
+
+
+def _resequence_tasks(tasks: list) -> None:
+    for index, task in enumerate(tasks):
+        task.position = index
+
+
+def _reorder_task(task, source_tasks: list, target_tasks: list, target_column_id: int, target_position: int) -> None:
+    source_without_task = [item for item in source_tasks if item.id != task.id]
+
+    if task.column_id == target_column_id:
+        insert_at = _clamp_task_position(target_position, len(source_without_task))
+        source_without_task.insert(insert_at, task)
+        _resequence_tasks(source_without_task)
+        return
+
+    target_without_task = [item for item in target_tasks if item.id != task.id]
+    insert_at = _clamp_task_position(target_position, len(target_without_task))
+    task.column_id = target_column_id
+    target_without_task.insert(insert_at, task)
+    _resequence_tasks(source_without_task)
+    _resequence_tasks(target_without_task)
+
+
 class JsonStorage(StorageInterface):
     def __init__(self, data_file: Path):
         self.data_file = data_file
@@ -324,10 +354,12 @@ class JsonStorage(StorageInterface):
         column = data.get_column(column_id)
         if not column:
             return None
+        source_column_id = task.column_id
+        source_tasks = _sorted_tasks(data.get_tasks_by_column(source_column_id))
+        target_tasks = source_tasks if source_column_id == column_id else _sorted_tasks(data.get_tasks_by_column(column_id))
         task.title = title
         task.description = description
-        task.column_id = column_id
-        task.position = position
+        _reorder_task(task, source_tasks, target_tasks, column_id, position)
         self.save(data)
         return task
 
@@ -674,10 +706,24 @@ class SqlAlchemyStorage(StorageInterface):
                 target_column = session.get(ColumnORM, column_id)
                 if not target_column:
                     return None
+                source_column_id = task.column_id
+                source_tasks = list(
+                    session.execute(
+                        select(TaskORM)
+                        .where(TaskORM.column_id == source_column_id)
+                        .order_by(TaskORM.position, TaskORM.id)
+                    ).scalars()
+                )
+                target_tasks = source_tasks if source_column_id == column_id else list(
+                    session.execute(
+                        select(TaskORM)
+                        .where(TaskORM.column_id == column_id)
+                        .order_by(TaskORM.position, TaskORM.id)
+                    ).scalars()
+                )
                 task.title = title
                 task.description = description
-                task.column_id = column_id
-                task.position = position
+                _reorder_task(task, source_tasks, target_tasks, column_id, position)
             return Task(
                 id=task.id,
                 title=task.title,
