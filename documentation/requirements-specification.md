@@ -77,6 +77,8 @@ This full-stack project aims to deliver a front-end and a back-end. Additionally
 
 ## Mockup
 
+![Mockup](./images/mockup.png)
+
 In this mock-up, users can add tasks by clicking the add button within the relevant columns. We placed the "Add New Task" button in the area where users expect the new tasks to be.
 
 In general, users should be able to modify elements by clicking on them. For example, tasks can be moved around with drag-and-drop, and can be deleted by dropping the task into the bin. Simulating a physical board like this is intended to make the interaction more intuitive, and it is an expected behaviour of kanban boards.
