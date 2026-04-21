@@ -98,6 +98,49 @@ def test_update_task(storage):
     assert task.column_id == 2
 
 
+def test_update_task_reorders_positions_within_same_column(storage):
+    second_task = storage.create_task("Second Task", "", 1, 1)
+    third_task = storage.create_task("Third Task", "", 1, 2)
+
+    assert second_task is not None
+    assert third_task is not None
+
+    updated_task = storage.update_task(third_task.id, "Third Task", "", 1, 0)
+
+    assert updated_task is not None
+
+    column = storage.get_column(1)
+    assert column is not None
+    assert [task.id for task in column.tasks] == [third_task.id, 1, second_task.id]
+    assert [task.position for task in column.tasks] == [0, 1, 2]
+
+
+def test_update_task_reorders_positions_across_both_columns(storage):
+    second_task = storage.create_task("Second Task", "", 1, 1)
+    done_task = storage.create_task("Done Task", "", 2, 0)
+    later_done_task = storage.create_task("Later Done Task", "", 2, 1)
+
+    assert second_task is not None
+    assert done_task is not None
+    assert later_done_task is not None
+
+    updated_task = storage.update_task(second_task.id, "Second Task", "", 2, 1)
+
+    assert updated_task is not None
+    assert updated_task.column_id == 2
+    assert updated_task.position == 1
+
+    source_column = storage.get_column(1)
+    target_column = storage.get_column(2)
+
+    assert source_column is not None
+    assert target_column is not None
+    assert [task.id for task in source_column.tasks] == [1]
+    assert [task.position for task in source_column.tasks] == [0]
+    assert [task.id for task in target_column.tasks] == [done_task.id, second_task.id, later_done_task.id]
+    assert [task.position for task in target_column.tasks] == [0, 1, 2]
+
+
 def test_sqlite_db_is_created_and_seeded_from_json(tmp_path, monkeypatch):
     data_dir = tmp_path / "data"
     data_dir.mkdir()
