@@ -43,6 +43,18 @@ def create_nested_data() -> dict:
                     }
                 ]
             }
+        ],
+        "accounts": [
+            {
+                "id": 1,
+                "username": "admin",
+                "password_hash": "admin"
+            },
+            {
+                "id": 2,
+                "username": "manager",
+                "password_hash": "manager"
+            }
         ]
     }
 
@@ -68,11 +80,14 @@ def sqlalchemy_storage() -> Generator[SqlAlchemyStorage, None, None]:
     storage = SqlAlchemyStorage()
 
     with storage._session() as session:
+        session.execute(text("DELETE FROM accounts"))
         session.execute(text("DELETE FROM tasks"))
         session.execute(text("DELETE FROM columns"))
         session.execute(text("DELETE FROM board"))
         session.commit()
 
+        session.execute(text("INSERT INTO accounts (id, username, password_hash) VALUES (1, 'admin', 'admin')"))
+        session.execute(text("INSERT INTO accounts (id, username, password_hash) VALUES (2, 'manager', 'manager')"))
         session.execute(text("INSERT INTO board (id, name) VALUES (1, 'Test Board')"))
         session.execute(text("INSERT INTO columns (id, name, position, board_id) VALUES (1, 'To Do', 0, 1)"))
         session.execute(text("INSERT INTO columns (id, name, position, board_id) VALUES (2, 'Done', 1, 1)"))
@@ -82,6 +97,7 @@ def sqlalchemy_storage() -> Generator[SqlAlchemyStorage, None, None]:
     yield storage
 
     with storage._session() as session:
+        session.execute(text("DELETE FROM accounts"))
         session.execute(text("DELETE FROM tasks"))
         session.execute(text("DELETE FROM columns"))
         session.execute(text("DELETE FROM board"))
@@ -106,11 +122,14 @@ def client(temp_data_file, monkeypatch) -> TestClient:
     storage = SqlAlchemyStorage()
 
     with storage._session() as session:
+        session.execute(text("DELETE FROM accounts"))
         session.execute(text("DELETE FROM tasks"))
         session.execute(text("DELETE FROM columns"))
         session.execute(text("DELETE FROM board"))
         session.commit()
 
+        session.execute(text("INSERT INTO accounts (id, username, password_hash) VALUES (1, 'admin', 'admin')"))
+        session.execute(text("INSERT INTO accounts (id, username, password_hash) VALUES (2, 'manager', 'manager')"))
         session.execute(text("INSERT INTO board (id, name) VALUES (1, 'Test Board')"))
         session.execute(text("INSERT INTO columns (id, name, position, board_id) VALUES (1, 'To Do', 0, 1)"))
         session.execute(text("INSERT INTO columns (id, name, position, board_id) VALUES (2, 'Done', 1, 1)"))

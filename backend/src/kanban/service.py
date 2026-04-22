@@ -1,6 +1,6 @@
 from typing import Optional
 
-from .models import Board, Column, Task
+from .models import Account, Board, Column, Task
 from .storage import StorageInterface
 
 
@@ -24,6 +24,16 @@ class KanbanService:
     def get_all_boards(self) -> list[Board]:
         data = self.storage.load()
         return data.boards
+    
+    def get_all_accounts(self) -> list[Account]:
+        data = self.storage.load()
+        return data.accounts
+    
+    def get_account(self, account_id: int) -> Account:
+        account = self.storage.get_account(account_id)
+        if not account:
+            raise NotFoundError("Account", account_id)
+        return account
 
     def create_board(self, name: str) -> Board:
         return self.storage.create_board(name)
@@ -38,10 +48,9 @@ class KanbanService:
         return result
 
     def delete_board(self, board_id: int) -> None:
-        board = self.storage.get_board(board_id)
-        if not board:
+        deleted = self.storage.delete_board(board_id)
+        if not deleted:
             raise NotFoundError("Board", board_id)
-        self.storage.delete_board(board_id)
 
     def get_column(self, column_id: int) -> Column:
         column = self.storage.get_column(column_id)
@@ -75,10 +84,9 @@ class KanbanService:
         return result
 
     def delete_column(self, column_id: int) -> None:
-        column = self.storage.get_column(column_id)
-        if not column:
+        deleted = self.storage.delete_column(column_id)
+        if not deleted:
             raise NotFoundError("Column", column_id)
-        self.storage.delete_column(column_id)
 
     def get_task(self, task_id: int) -> Task:
         task = self.storage.get_task(task_id)
@@ -115,7 +123,6 @@ class KanbanService:
         return result
 
     def delete_task(self, task_id: int) -> None:
-        task = self.storage.get_task(task_id)
-        if not task:
+        deleted = self.storage.delete_task(task_id)
+        if not deleted:
             raise NotFoundError("Task", task_id)
-        self.storage.delete_task(task_id)

@@ -1,0 +1,63 @@
+================================================================================
+TEST SUITE IMPLEMENTATION PLAN
+================================================================================
+
+CURRENT GOAL
+--------------------------------------------------------------------------------
+Verify functionality of the Kanban backend by adding tests to uncover what
+works and what doesn't.
+
+SCOPE
+--------------------------------------------------------------------------------
+Test three components:
+  1. API Endpoints (active routes only)
+  2. JSON-based storage (JsonStorage)
+  3. Database-based storage (SqlAlchemyStorage)
+
+PLAN
+--------------------------------------------------------------------------------
+1. Run existing tests to establish baseline
+   - Dependencies must be installed first (pip install -e ".[dev]")
+
+2. Refactor conftest.py
+   - Add parameterized storage fixture for ["json", "sqlite"]
+   - SQLite uses in-memory database (sqlite:///:memory:)
+   - JSON uses temp file
+
+3. Refactor test_storage.py
+   - Use parameterized storage fixture
+   - Run identical CRUD tests against both backends sequentially
+   - Cover: boards, columns, tasks (get/create/update/delete + not-found)
+
+4. Add/expand API tests
+   - Test active endpoints only using SQLite-backed client:
+     * GET  /api/boards              - List all boards
+     * GET  /api/boards/{id}         - Get board by ID
+     * GET  /api/columns/{id}/tasks  - Get tasks by column
+     * POST /api/tasks               - Create task
+     * PUT  /api/tasks/{task_id}     - Update task
+   - Verify 404 handling and success responses
+
+5. Analyze results to identify what works and what doesn't
+
+TEST FILE STRUCTURE
+--------------------------------------------------------------------------------
+tests/
+  conftest.py              - Parametrized storage fixture
+  test_storage.py           - Shared tests via parametrize
+  test_api_boards.py        - Board endpoint tests
+  test_api_tasks.py         - Task endpoint tests
+  test_api_columns.py       - Column endpoint tests (GET /api/columns/{id}/tasks)
+
+DECISIONS RESOLVED
+--------------------------------------------------------------------------------
+[x] Active endpoints only (leave commented-out routes as-is)
+[x] Fresh test database per run
+[x] Sequential (parametrized) testing - shared test logic via @pytest.mark.parametrize
+[x] In-memory SQLite for SqlAlchemyStorage tests
+[x] No KanbanService tests (implementation may change)
+[x] SQLite as default storage for API tests
+
+BLOCKERS
+--------------------------------------------------------------------------------
+- Dependencies not installed: pip install -e ".[dev]" must be run before tests

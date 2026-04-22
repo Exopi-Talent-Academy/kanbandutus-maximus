@@ -6,9 +6,10 @@ from typing import Optional
 from sqlalchemy import delete, select
 from sqlalchemy.orm import selectinload
 
+from .config import get_data_file, get_database_url
 from .db import SessionLocal, init_db
-from .models import Board, Column, KanbanData, Task
-from .orm_models import BoardORM, ColumnORM, TaskORM
+from .models import Account, Board, Column, KanbanData, Task
+from .orm_models import AccountORM, BoardORM, ColumnORM, TaskORM
 
 
 class StorageInterface(ABC):
@@ -22,6 +23,10 @@ class StorageInterface(ABC):
 
     @abstractmethod
     def get_board(self, board_id: int) -> Optional[Board]:
+        pass
+
+    @abstractmethod
+    def get_account(self, account_id: int) -> Optional[Account]:
         pass
 
     @abstractmethod
@@ -69,6 +74,56 @@ class StorageInterface(ABC):
         pass
 
 
+def _sorted_tasks(tasks: list) -> list:
+    return sorted(tasks, key=lambda task: (task.position, task.id))
+
+
+def _clamp_task_position(position: int, task_count: int) -> int:
+    return max(0, min(position, task_count))
+
+
+def _resequence_tasks(tasks: list) -> None:
+    for index, task in enumerate(tasks):
+        task.position = index
+
+
+def _sorted_columns(columns: list) -> list:
+    return sorted(columns, key=lambda column: (column.position, column.id))
+
+
+def _clamp_column_position(position: int, column_count: int) -> int:
+    return max(0, min(position, column_count))
+
+
+def _resequence_columns(columns: list) -> None:
+    for index, column in enumerate(columns):
+        column.position = index
+
+
+def _reorder_column(column, board_columns: list, target_position: int) -> None:
+    other_columns = [item for item in board_columns if item.id != column.id]
+    insert_at = _clamp_column_position(target_position, len(other_columns))
+    other_columns.insert(insert_at, column)
+    _resequence_columns(other_columns)
+
+
+def _reorder_task(task, source_tasks: list, target_tasks: list, target_column_id: int, target_position: int) -> None:
+    source_without_task = [item for item in source_tasks if item.id != task.id]
+
+    if task.column_id == target_column_id:
+        insert_at = _clamp_task_position(target_position, len(source_without_task))
+        source_without_task.insert(insert_at, task)
+        _resequence_tasks(source_without_task)
+        return
+
+    target_without_task = [item for item in target_tasks if item.id != task.id]
+    insert_at = _clamp_task_position(target_position, len(target_without_task))
+    task.column_id = target_column_id
+    target_without_task.insert(insert_at, task)
+    _resequence_tasks(source_without_task)
+    _resequence_tasks(target_without_task)
+
+
 class JsonStorage(StorageInterface):
     def __init__(self, data_file: Path):
         self.data_file = data_file
@@ -105,6 +160,7 @@ class JsonStorage(StorageInterface):
         boards: list[Board] = []
         columns: list[Column] = []
         tasks: list[Task] = []
+        accounts: list[Account] = []
 
         # Backward-compatible read: supports nested board->columns->tasks and flat arrays.
         for board_data in data.get("boards", []):
@@ -158,7 +214,17 @@ class JsonStorage(StorageInterface):
                 for t in data.get("tasks", [])
             ]
 
-        kanban_data = KanbanData(boards=boards, columns=columns, tasks=tasks)
+        if data.get("accounts"):
+            accounts = [
+                Account(
+                    id=account["id"],
+                    username=account["username"],
+                    password_hash=account.get("password_hash", account.get("password", "")),
+                )
+                for account in data.get("accounts", [])
+            ]
+
+        kanban_data = KanbanData(boards=boards, columns=columns, tasks=tasks, accounts=accounts)
         self._link_nested_relations(kanban_data)
         return kanban_data
 
@@ -191,7 +257,15 @@ class JsonStorage(StorageInterface):
                     ],
                 }
                 for board in data.boards
-            ]
+            ],
+            "accounts": [
+                {
+                    "id": account.id,
+                    "username": account.username,
+                    "password_hash": account.password_hash,
+                }
+                for account in data.accounts
+            ],
         }
 
     def load(self) -> KanbanData:
@@ -203,6 +277,13 @@ class JsonStorage(StorageInterface):
     def get_board(self, board_id: int) -> Optional[Board]:
         data = self.load()
         return data.get_board(board_id)
+
+    def get_account(self, account_id: int) -> Optional[Account]:
+        data = self.load()
+        for account in data.accounts:
+            if account.id == account_id:
+                return account
+        return None
 
     def create_board(self, name: str) -> Board:
         data = self.load()
@@ -252,8 +333,9 @@ class JsonStorage(StorageInterface):
         data = self.load()
         column = data.get_column(column_id)
         if column:
+            board_columns = _sorted_columns([item for item in data.columns if item.board_id == column.board_id])
             column.name = name
-            column.position = position
+            _reorder_column(column, board_columns, position)
             self.save(data)
         return column
 
@@ -293,10 +375,12 @@ class JsonStorage(StorageInterface):
         column = data.get_column(column_id)
         if not column:
             return None
+        source_column_id = task.column_id
+        source_tasks = _sorted_tasks(data.get_tasks_by_column(source_column_id))
+        target_tasks = source_tasks if source_column_id == column_id else _sorted_tasks(data.get_tasks_by_column(column_id))
         task.title = title
         task.description = description
-        task.column_id = column_id
-        task.position = position
+        _reorder_task(task, source_tasks, target_tasks, column_id, position)
         self.save(data)
         return task
 
@@ -312,7 +396,34 @@ class JsonStorage(StorageInterface):
 
 class SqlAlchemyStorage(StorageInterface):
     def __init__(self):
+        should_seed = self._should_seed_from_json()
         init_db()
+        if should_seed:
+            self._seed_from_default_json()
+
+    def _should_seed_from_json(self) -> bool:
+        database_url = get_database_url()
+        if not database_url.startswith("sqlite:///"):
+            return False
+
+        sqlite_path = database_url.replace("sqlite:///", "", 1)
+        return sqlite_path != ":memory:" and not Path(sqlite_path).exists()
+
+    def _seed_from_default_json(self) -> None:
+        data_file = get_data_file()
+        if not data_file.exists():
+            return
+
+        with SessionLocal() as session:
+            has_existing_data = (
+                session.scalar(select(BoardORM.id).limit(1)) is not None
+                or session.scalar(select(AccountORM.id).limit(1)) is not None
+            )
+
+        if has_existing_data:
+            return
+
+        self.save(JsonStorage(data_file).load())
 
     def _session(self):
         return SessionLocal()
@@ -349,6 +460,13 @@ class SqlAlchemyStorage(StorageInterface):
         domain_tasks = [task for column in domain_columns for task in column.tasks]
         return KanbanData(boards=domain_boards, columns=domain_columns, tasks=domain_tasks)
 
+    def _to_domain_account(self, account: AccountORM) -> Account:
+        return Account(
+            id=account.id,
+            username=account.username,
+            password_hash=account.password_hash,
+        )
+
     def _flatten_columns_tasks(self, data: KanbanData) -> tuple[list[Column], list[Task]]:
         if data.columns:
             columns = data.columns
@@ -374,13 +492,17 @@ class SqlAlchemyStorage(StorageInterface):
                 .unique()
                 .all()
             )
-            return self._to_kanban_data(boards)
+            accounts = session.execute(select(AccountORM).order_by(AccountORM.id)).scalars().all()
+            data = self._to_kanban_data(boards)
+            data.accounts = [self._to_domain_account(account) for account in accounts]
+            return data
 
     def save(self, data: KanbanData) -> None:
         columns, tasks = self._flatten_columns_tasks(data)
 
         with SessionLocal() as session:
             with session.begin():
+                session.execute(delete(AccountORM))
                 session.execute(delete(TaskORM))
                 session.execute(delete(ColumnORM))
                 session.execute(delete(BoardORM))
@@ -410,6 +532,16 @@ class SqlAlchemyStorage(StorageInterface):
                         for task in tasks
                     ]
                 )
+                session.add_all(
+                    [
+                        AccountORM(
+                            id=account.id,
+                            username=account.username,
+                            password_hash=account.password_hash,
+                        )
+                        for account in data.accounts
+                    ]
+                )
 
     def get_board(self, board_id: int) -> Optional[Board]:
         with SessionLocal() as session:
@@ -424,6 +556,11 @@ class SqlAlchemyStorage(StorageInterface):
                 .first()
             )
             return self._to_domain_board(board) if board else None
+
+    def get_account(self, account_id: int) -> Optional[Account]:
+        with SessionLocal() as session:
+            account = session.get(AccountORM, account_id)
+            return self._to_domain_account(account) if account else None
 
     def create_board(self, name: str) -> Board:
         with SessionLocal() as session:
@@ -509,9 +646,16 @@ class SqlAlchemyStorage(StorageInterface):
                 column = session.get(ColumnORM, column_id)
                 if not column:
                     return None
+                board_columns = list(
+                    session.execute(
+                        select(ColumnORM)
+                        .where(ColumnORM.board_id == column.board_id)
+                        .order_by(ColumnORM.position, ColumnORM.id)
+                    ).scalars()
+                )
                 column.name = name
-                column.position = position
                 board_id = column.board_id
+                _reorder_column(column, board_columns, position)
 
             refreshed = (
                 session.execute(select(ColumnORM).where(ColumnORM.id == column_id).options(selectinload(ColumnORM.tasks)))
@@ -590,10 +734,24 @@ class SqlAlchemyStorage(StorageInterface):
                 target_column = session.get(ColumnORM, column_id)
                 if not target_column:
                     return None
+                source_column_id = task.column_id
+                source_tasks = list(
+                    session.execute(
+                        select(TaskORM)
+                        .where(TaskORM.column_id == source_column_id)
+                        .order_by(TaskORM.position, TaskORM.id)
+                    ).scalars()
+                )
+                target_tasks = source_tasks if source_column_id == column_id else list(
+                    session.execute(
+                        select(TaskORM)
+                        .where(TaskORM.column_id == column_id)
+                        .order_by(TaskORM.position, TaskORM.id)
+                    ).scalars()
+                )
                 task.title = title
                 task.description = description
-                task.column_id = column_id
-                task.position = position
+                _reorder_task(task, source_tasks, target_tasks, column_id, position)
             return Task(
                 id=task.id,
                 title=task.title,

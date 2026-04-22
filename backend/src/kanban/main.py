@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from .config import get_data_file, get_storage_backend, get_cors_origins
-from .frontend import AngularMock, FrontendInterface
 from .service import KanbanService, NotFoundError
 from .storage import JsonStorage, SqlAlchemyStorage, StorageInterface
 
@@ -22,10 +21,6 @@ def get_storage() -> StorageInterface:
     if get_storage_backend() == "sqlite":
         return SqlAlchemyStorage()
     return JsonStorage(get_data_file())
-
-
-def get_frontend() -> FrontendInterface:
-    return AngularMock()
 
 
 service = KanbanService(get_storage())
@@ -130,30 +125,30 @@ def get_board(board_id: int):
 
 ##### COLUMNS #####
 
-## Create new Column.
-# @app.post("/api/columns")
-# def create_column(column: ColumnCreate):
-#     try:
-#         return service.create_column(column.name, column.position, column.board_id)
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+# Create new Column.
+@app.post("/api/columns")
+def create_column(column: ColumnCreate):
+    try:
+        return service.create_column(column.name, column.position, column.board_id)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
-## Updates Column data (such as name, position)
-# @app.put("/api/columns/{column_id}")
-# def update_column(column_id: int, column: ColumnUpdate):
-#     try:
-#         return service.update_column(column_id, column.name, column.position)
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+# Updates Column data (such as name, position)
+@app.put("/api/columns/{column_id}")
+def update_column(column_id: int, column: ColumnUpdate):
+    try:
+        return service.update_column(column_id, column.name, column.position)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
-## Deletes a Column.  
-# @app.delete("/api/columns/{column_id}")
-# def delete_column(column_id: int):
-#     try:
-#         service.delete_column(column_id)
-#         return {"message": "Column deleted"}
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+# Deletes a Column.  
+@app.delete("/api/columns/{column_id}")
+def delete_column(column_id: int):
+    try:
+        service.delete_column(column_id)
+        return {"message": "Column deleted"}
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 
@@ -185,13 +180,13 @@ def update_task(task_id: int, task: TaskUpdate):
         raise HTTPException(status_code=404, detail=str(e))
 
 ## Deletes a task.
-# @app.delete("/api/tasks/{task_id}")
-# def delete_task(task_id: int):
-#     try:
-#         service.delete_task(task_id)
-#         return {"message": "Task deleted"}
-#     except NotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e))
+@app.delete("/api/tasks/{task_id}", status_code=200)
+def delete_task(task_id: int):
+    try:
+        service.delete_task(task_id)
+        return {"message": "Task deleted"}
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 ## Gets a task. Probably don't use this, use Get Board instead.
 # @app.get("/api/tasks/{task_id}")
@@ -200,3 +195,20 @@ def update_task(task_id: int, task: TaskUpdate):
 #         return service.get_task(task_id)
 #     except NotFoundError as e:
 #         raise HTTPException(status_code=404, detail=str(e))
+
+
+
+##### ACCOUNTS #####
+
+## Get all accounts. 
+@app.get("/api/accounts")
+def get_accounts():
+    return service.get_all_accounts()
+
+## Get a specific account. 
+@app.get("/api/accounts/{account_id}")
+def get_account(account_id: int):
+    try:
+        return service.get_account(account_id)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))

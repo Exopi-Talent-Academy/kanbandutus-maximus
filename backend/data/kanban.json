@@ -131,5 +131,27 @@
         }
       ]
     }
+  ],
+  "accounts": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password_hash": "admin"
+    },
+    {
+      "id": 2,
+      "username": "manager",
+      "password_hash": "manager"
+    },
+        {
+      "id": 3,
+      "username": "developer",
+      "password_hash": "developer"
+    },
+        {
+      "id": 4,
+      "username": "guest",
+      "password_hash": "guest"
+    }
   ]
 }
