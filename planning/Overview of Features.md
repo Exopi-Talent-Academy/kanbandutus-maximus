@@ -15,7 +15,7 @@
 
 | User Story | Feature | API Endpoint |
 | :---- | :---- | :---- |
-| *“As a manager, I need to adjust the number of columns.”* | Add a column Delete a column | POST: api/columns/\[id\] DELETE: api/columns/\[id\] |
+| *“As a manager, I need to adjust the number of columns.”* | Add a column <br> Delete a column | POST: api/columns <br> DELETE: api/columns/\[id\] |
 | *“As a manager, I need to name the columns, in order to define the progression points.”* | Edit a column | PUT: api/columns/\[id\] |
 | *“As a manager, I need to reorder the columns, in order to define the progression points.”* | Move a column (Drag and drop on UI) | PUT: api/columns/\[id\] |
 | *“As a product owner, I need to add a new board, in order to start a new project.”* | Add a new board | POST: api/boards |
