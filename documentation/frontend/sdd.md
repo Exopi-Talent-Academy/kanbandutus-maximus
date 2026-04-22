@@ -4,13 +4,7 @@
 
 ### 1.1 Architecture
 
-```
-┌─────────────┐     HTTP      ┌──────────────┐
-│   Angular  │ ───────────► │  FastAPI    │
-│   Frontend  │ ◄────────── │  Backend    │
-│  (Port 4200)│   JSON      │  (Port 8000)│
-└─────────────┘               └──────────────┘
-```
+![Architecture Diagram](./diagrams/architecture.svg)
 
 ### 1.2 Technology Stack
 
@@ -26,17 +20,7 @@
 
 ### 2.1 Component Hierarchy
 
-```
-App
-├── NavBar
-├── Header
-└── Board
-    └── EachColumn (for each column)
-        ├── AddNewTask
-        └── EachRow (for each task)
-            └── Task
-                └── TaskForm (edit mode)
-```
+See [Architecture Diagram](./diagrams/architecture.svg) for visualization.
 
 ### 2.2 Frontend Services
 

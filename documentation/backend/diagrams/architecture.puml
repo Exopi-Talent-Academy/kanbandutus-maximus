@@ -1,0 +1,21 @@
+@startuml
+skinparam componentStyle uml2
+
+actor Client
+component "FastAPI\nBackend" as API
+component "KanbanService" as Svc
+component "Storage\nInterface" as Store
+component JsonStorage
+component SqlAlchemyStorage
+database "JSON File" as File
+database "SQLite\nDatabase" as DB
+
+Client -[#007acc]-> API : JSON
+API -[#007acc]-> Svc
+Svc -[#007acc]-> Store
+Store .[#00994d].> JsonStorage : Strategy
+Store .[#00994d].> SqlAlchemyStorage : Strategy
+JsonStorage -[#00994d]-> File
+SqlAlchemyStorage -[#00994d]-> DB
+
+@enduml

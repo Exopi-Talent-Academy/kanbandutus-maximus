@@ -1,0 +1,22 @@
+digraph G {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor="#f9f9f9", stroke="#333", penwidth=1];
+    edge [color="#333"];
+    
+    Client [label="Client\nHTTP", shape=ellipse, fillcolor="#e1f5fe"];
+    API [label="FastAPI\nBackend", fillcolor="#f3e5f5", penwidth=2];
+    Svc [label="KanbanService", fillcolor="#fff8e1", penwidth=2];
+    Storage [label="Storage\nInterface", fillcolor="#e8f5e9", penwidth=2];
+    Json [label="JsonStorage"];
+    SQL [label="SqlAlchemyStorage"];
+    File [label="JSON File", shape=cylinder, fillcolor="#fff3e0"];
+    DB [label="SQLite\nDatabase", shape=cylinder, fillcolor="#e0e0e0"];
+    
+    Client -> API [label="JSON"];
+    API -> Svc;
+    Svc -> Storage;
+    Storage -> Json [label="Strategy", style=dashed];
+    Storage -> SQL [label="Strategy", style=dashed];
+    Json -> File;
+    SQL -> DB;
+}

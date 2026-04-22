@@ -1,0 +1,28 @@
+digraph G {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor="#f9f9f9", stroke="#333", penwidth=1];
+    edge [color="#333"];
+    
+    Browser [shape=ellipse, fillcolor="#e1f5fe"];
+    Angular [label="Angular\nFrontend", fillcolor="#f3e5f5", penwidth=2];
+    HttpClient [label="HttpClient", fillcolor="#e8f5e9"];
+    API [label="FastAPI\nBackend", fillcolor="#e1f5fe"];
+    Comp [label="Components", fillcolor="#fff8e1", penwidth=2];
+    Board [label="Board"];
+    Column [label="EachColumn"];
+    Task [label="Task"];
+    Services [label="Services", fillcolor="#e8f5e9", penwidth=2];
+    TasksSvc [label="Tasks Service"];
+    Signal [label="Signals\nState"];
+    
+    Browser -> Angular;
+    Angular -> HttpClient;
+    HttpClient -> API [label="JSON"];
+    Angular -> Comp;
+    Comp -> Board;
+    Comp -> Column;
+    Comp -> Task;
+    Angular -> Services;
+    Services -> TasksSvc;
+    TasksSvc -> Signal;
+}

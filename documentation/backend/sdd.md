@@ -4,19 +4,7 @@
 
 ### 1.1 Architecture
 
-```
-┌──────────────┐     HTTP     ┌──────────────┐     Storage     ┌────────────┐
-│   Client    │ ─────────► │  FastAPI   │ ◄──────────► │   JSON    │
-│             │  JSON      │  Backend   │              │   File    │
-└──────────────┘            └──────────────┘              └──────────┘
-                                                    
-                                                    
-                                                 ▼
-                                          ┌──────────────┐
-                                          │   SQLite    │
-                                          │  (default) │
-                                          └──────────┘
-```
+![Architecture Diagram](./diagrams/architecture.svg)
 
 ### 1.2 Technology Stack
 
@@ -35,37 +23,7 @@
 
 ### 2.1 Layered Architecture
 
-```
-┌─────────────────────────────────────┐
-│  Layer 1: FastAPI Application       │
-│  - REST endpoints                 │
-│  - Pydantic validation           │
-│  - RFC 7807 error handling       │
-│  - CORS middleware              │
-└─────────────────────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────┐
-│  Layer 2: KanbanService           │
-│  - Business logic                │
-│  - Entity validation            │
-│  - NotFoundError exceptions     │
-└─────────────────────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────┐
-│  Layer 3: Storage Interface       │
-│  - JsonStorage               │
-│  - SqlAlchemyStorage        │
-└─────────────────────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────┐
-│  Layer 4: Data Source            │
-│  - JSON file                 │
-│  - SQLite database           │
-└─────────────────────────────────────┘
-```
+See [Architecture Diagram](./diagrams/architecture.svg) for visualization.
 
 ### 2.2 Storage Strategy Pattern
 

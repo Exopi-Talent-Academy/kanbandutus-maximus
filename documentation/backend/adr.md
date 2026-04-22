@@ -1,6 +1,32 @@
 # Architecture Decision Record - Backend
 
-## ADR 001: Backend Framework
+## ADR 001: Backend Development Language
+
+### Status
+Accepted
+
+### Decision
+Use Python as the backend development language.
+
+### Goal
+Build a backend quickly that can deliver a standard REST API, preferably in a way that most of the team can understand and interact with.
+
+### Context
+We are a small team required to develop an application from scratch at speed.
+Everyone on the team has read or interacted with Python before to some degree, and the backend developer is familiar with it.
+
+### Alternatives
+- C#: A lot of boilerplate for the purpose; less developer familiarity
+- Javascript: Less language knowledge required, but team was overall equally or more familiar with Python.
+- Go: Technically the better choice, but noone on the team were familiar with it. Should be considered if fast response times or heavy load becomes a factor.
+
+### Trade-offs
+**Pros:** Widely understood, flexible; solid frameworks available and widely supported.
+**Cons:** Interpreted language, slower.
+
+---
+
+## ADR 002: Backend Framework
 
 ### Status
 Accepted
@@ -26,7 +52,7 @@ Need a Python web framework that supports quick development, a testable interfac
 
 ---
 
-## ADR 002: ORM Strategy
+## ADR 003: ORM Strategy
 
 ### Status
 Accepted
@@ -50,7 +76,7 @@ Project requirements include supporting both JSON file storage and database stor
 
 ---
 
-## ADR 003: Default Storage Backend
+## ADR 004: Default Storage Backend
 
 ### Status
 Accepted
@@ -74,7 +100,7 @@ Need persistent storage. SQLite requires no setup and works well for single-user
 
 ---
 
-## ADR 004: Storage Abstraction
+## ADR 005: Storage Abstraction
 
 ### Status
 Accepted
@@ -101,7 +127,7 @@ Architecture that supports multiple storage types for several reasons:
 
 ---
 
-## ADR 005: Data Validation
+## ADR 006: Data Validation
 
 ### Status
 Accepted
@@ -125,7 +151,7 @@ FastAPI has built-in Pydantic support. Need to validate incoming requests and se
 
 ---
 
-## ADR 006: Error Response Format
+## ADR 007: Error Response Format
 
 ### Status
 Accepted
@@ -150,7 +176,7 @@ Need standardized error format for API clients to parse.
 
 ---
 
-## ADR 007: Configuration via Environment Variables
+## ADR 008: Configuration via Environment Variables
 
 ### Status
 Accepted
@@ -175,7 +201,7 @@ Need way to configure storage backend, database path, and CORS origins.
 
 ---
 
-## ADR 008: No Authentication
+## ADR 009: No Authentication
 
 ### Status
 Accepted
@@ -200,7 +226,7 @@ Skip authentication entirely for current product.
 
 ---
 
-## ADR 009: Auto-integer ID Generation
+## ADR 010: Auto-integer ID Generation
 
 ### Status
 Accepted

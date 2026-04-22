@@ -1,0 +1,17 @@
+graph TD
+    Client["Browser"] --> Angular[Angular<br/>Frontend]
+    Angular --> HTTP[HttpClient]
+    HTTP -->|JSON| API[FastAPI<br/>Backend]
+    
+    Angular --> Comp[Components]
+    Comp --> Board[Board]
+    Comp --> Column[EachColumn]
+    Comp --> Task[Task]
+    
+    Angular --> Svc[Services]
+    Svc --> TasksSvc[Tasks Service]
+    TasksSvc --> Signal[Signals<br/>State]
+    
+    style Angular fill:#f9f,stroke:#333,stroke-width:2px
+    style Comp fill:#ff9,stroke:#333,stroke-width:2px
+    style Svc fill:#9f9,stroke:#333,stroke-width:2px

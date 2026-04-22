@@ -1,0 +1,29 @@
+@startuml
+skinparam componentStyle uml2
+
+actor Browser
+component "Angular\nFrontend" as Angular
+component HttpClient
+component "FastAPI\nBackend" as API
+component "Components" as Comp
+component Board
+component EachColumn
+component Task
+component Services
+component "Tasks Service"
+component "Signals\nState"
+
+Browser -[#dd00cc]-> Angular
+Angular -[#007acc]-> HttpClient
+HttpClient -[#007acc]-> API : JSON
+
+Angular -[#ff9900]-> Comp
+Comp -[#ff9900]-> Board
+Comp -[#ff9900]-> EachColumn
+Comp -[#ff9900]-> Task
+
+Angular -[#00994d]-> Services
+Services -[#00994d]-> TasksSvc
+TasksSvc -[#00994d]-> Signal
+
+@enduml
