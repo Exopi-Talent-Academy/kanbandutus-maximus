@@ -25,6 +25,16 @@ export class Tasks {
 
   currentUser = new Subject<User>();
 
+  movingColumn = {
+    name: '',
+    position: 1111,
+  };
+
+  onColumnMove(name: string, position: number) {
+    this.movingColumn.name = name;
+    this.movingColumn.position = position;
+  }
+
   setUser(user: User) {
     this.currentUser.next(user);
   }
@@ -103,5 +113,11 @@ export class Tasks {
     setTimeout(() => {
       this.updateAvailable.next(false);
     }, 3000);
+  }
+
+  updateColumn(column: { name: string; position: number }, columnId: number) {
+    return this.http
+      .put<any>(`${BASE_URL}/columns/${columnId}`, column)
+      .pipe(tap(() => this.showUpdateNotification()));
   }
 }

@@ -1,15 +1,17 @@
 <app-container>
   <div class="board">
     @for (column of currentBoard()?.columns; track column.id) {
-      <app-each-column
-        class="each-column"
-        [columnName]="column.name"
-        [tasks]="column.tasks"
-        [position]="column.position"
-        [boardId]="currentBoard()?.id ?? 0"
-        [board]="currentBoard()!"
-        [columnId]="column.id"
-      ></app-each-column>
+      <app-column-container [columnName]="column.name" [position]="column.position">
+        <app-each-column
+          class="each-column"
+          [columnName]="column.name"
+          [tasks]="column.tasks"
+          [position]="column.position"
+          [boardId]="currentBoard()?.id ?? 0"
+          [board]="currentBoard()!"
+          [columnId]="column.id"
+        ></app-each-column>
+      </app-column-container>
     }
   </div>
 </app-container>

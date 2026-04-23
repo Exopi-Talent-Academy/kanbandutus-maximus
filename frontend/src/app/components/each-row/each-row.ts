@@ -38,11 +38,11 @@ export class EachRow {
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
-    console.log(event);
+    // console.log(event);
   }
 
   onDragLeave(event: DragEvent) {
     event.preventDefault();
-    console.log();
+    // console.log();
   }
 }
