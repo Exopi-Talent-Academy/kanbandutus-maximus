@@ -15,7 +15,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .config import get_cors_origins, get_data_file, get_storage_backend
+from .config import get_storage_config, get_cors_origins
 from .dto import AccountResponse
 from .repositories import KanbanStorage
 from .service import KanbanService, NotFoundError
@@ -39,9 +39,10 @@ def get_storage():
     Returns:
         A storage implementation (JsonStorage or SqlAlchemyStorage)
     """
-    if get_storage_backend() == "sqlite":
+    config = get_storage_config()
+    if config.backend == "sqlite":
         return SqlAlchemyStorage()
-    return JsonStorage(get_data_file())
+    return JsonStorage(config.json_file)
 
 
 service = KanbanService(get_storage())

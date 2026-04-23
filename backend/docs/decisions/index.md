@@ -18,6 +18,7 @@ Each record follows the format: `{number}_{title}_{status}.md`
 | 008 | Configuration via Environment Variables | Accepted |
 | 009 | No Authentication | Accepted |
 | 010 | Auto-integer ID Generation | Accepted |
+| 011 | Storage Configuration Consolidation | Accepted |
 
 ## Overview
 
@@ -29,6 +30,7 @@ Each record follows the format: `{number}_{title}_{status}.md`
 ### Storage Decisions
 - **004**: SQLite as default storage
 - **005**: Strategy pattern for storage abstraction (JSON + SQLite backends)
+- **011**: Consolidated storage configuration with StorageConfig
 
 ### API Design Decisions
 - **006**: Pydantic for request/response validation

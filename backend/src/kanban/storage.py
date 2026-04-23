@@ -17,7 +17,7 @@ from typing import Optional
 from sqlalchemy import delete, select
 from sqlalchemy.orm import selectinload
 
-from .config import get_data_file, get_database_url
+from .config import get_storage_config
 from .db import SessionLocal, init_db
 from .models import Account, Board, Column, KanbanData, Task
 from .orm_models import AccountORM, BoardORM, ColumnORM, TaskORM
@@ -629,16 +629,21 @@ class SqlAlchemyStorage(KanbanStorage):
 
     def _should_seed_from_json(self) -> bool:
         """Determine if database should be seeded from JSON file."""
-        database_url = get_database_url()
-        if not database_url.startswith("sqlite:///"):
+        config = get_storage_config()
+        if config.database_url and not config.database_url.startswith("sqlite:///"):
             return False
 
-        sqlite_path = database_url.replace("sqlite:///", "", 1)
-        return sqlite_path != ":memory:" and not Path(sqlite_path).exists()
+        if config.database_url:
+            sqlite_path = config.database_url.replace("sqlite:///", "", 1)
+        else:
+            sqlite_path = config.data_dir / "kanban.db"
+
+        return str(sqlite_path) != ":memory:" and not Path(sqlite_path).exists()
 
     def _seed_from_default_json(self) -> None:
         """Seed the database from the default JSON data file if empty."""
-        data_file = get_data_file()
+        config = get_storage_config()
+        data_file = config.json_file
         if not data_file.exists():
             return
 

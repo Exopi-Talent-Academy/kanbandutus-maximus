@@ -3,7 +3,7 @@ from pathlib import Path
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-from .config import get_database_url
+from .config import get_storage_config
 
 if "Base" not in globals():
     Base = declarative_base()
@@ -18,7 +18,8 @@ engine = None
 def _configure_engine() -> None:
     global DATABASE_URL, engine
 
-    DATABASE_URL = get_database_url()
+    config = get_storage_config()
+    DATABASE_URL = config.sqlite_url
 
     if DATABASE_URL.startswith("sqlite:///"):
         sqlite_path = DATABASE_URL.replace("sqlite:///", "", 1)
@@ -27,7 +28,9 @@ def _configure_engine() -> None:
 
     engine = create_engine(
         DATABASE_URL,
-        connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {},
+        connect_args={"check_same_thread": False}
+        if DATABASE_URL.startswith("sqlite")
+        else {},
     )
     SessionLocal.configure(bind=engine)
 
@@ -36,7 +39,7 @@ _configure_engine()
 
 
 def ensure_db_engine() -> None:
-    if get_database_url() != DATABASE_URL:
+    if get_storage_config().sqlite_url != DATABASE_URL:
         _configure_engine()
 
 
@@ -64,4 +67,8 @@ def init_db() -> None:
         return
 
     with engine.begin() as connection:
-        connection.execute(text("ALTER TABLE accounts ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'read'"))
+        connection.execute(
+            text(
+                "ALTER TABLE accounts ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'read'"
+            )
+        )
