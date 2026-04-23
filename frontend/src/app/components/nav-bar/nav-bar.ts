@@ -25,5 +25,6 @@ export class NavBar implements OnInit {
       username: '',
       password_hash: '',
     });
+    localStorage.removeItem('userId');
   }
 }

@@ -79,9 +79,14 @@ export class App implements OnInit {
       res.forEach((user) => {
         console.log(user.username, user.password_hash);
         if (user.username === this.username && this.password === user.password_hash) {
+          const userId = user.id.toString();
+          // Optional: persist to storage
+          localStorage.setItem('userId', userId);
+          console.log(localStorage.getItem('userId'));
           this.taskService.setUser(user);
           this.username = '';
           this.password = '';
+
           this.login.set(true);
         }
         console.log(this.login());
