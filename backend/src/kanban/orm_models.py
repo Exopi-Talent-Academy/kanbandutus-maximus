@@ -52,5 +52,6 @@ class AccountORM(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     username: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
     password_hash: Mapped[str] = mapped_column(String(128), nullable=False)
+    role: Mapped[str] = mapped_column(String(20), nullable=False, default="read")
     
     
