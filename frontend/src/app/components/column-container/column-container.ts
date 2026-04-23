@@ -15,11 +15,14 @@ export class ColumnContainer {
   taskService = inject(Tasks);
 
   onDragDrop(event: DragEvent) {
-    // event.preventDefault();
-    const { name, position } = this.taskService.movingColumn;
-    this.taskService
-      .updateColumn({ name: name, position: this.position }, position)
-      .subscribe((res) => console.log(res));
+    event.preventDefault();
+    const target = event.target as EventTarget | null;
+    if (target instanceof HTMLElement && target?.tagName === 'P') {
+      const { name, position } = this.taskService.movingColumn;
+      this.taskService
+        .updateColumn({ name: name, position: this.position }, position)
+        .subscribe((res) => console.log(res));
+    }
   }
   onDragOver(event: DragEvent) {
     event.preventDefault();
