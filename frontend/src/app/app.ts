@@ -23,7 +23,7 @@ export class App implements OnInit {
 
   faClose = faClose;
 
-  login = signal(false);
+  login = signal(true);
   username: string = '';
   password: string = '';
 
