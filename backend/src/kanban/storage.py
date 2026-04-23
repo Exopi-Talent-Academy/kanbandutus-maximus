@@ -220,6 +220,7 @@ class JsonStorage(StorageInterface):
                     id=account["id"],
                     username=account["username"],
                     password_hash=account.get("password_hash", account.get("password", "")),
+                    role=account.get("role", "read"),
                 )
                 for account in data.get("accounts", [])
             ]
@@ -263,6 +264,7 @@ class JsonStorage(StorageInterface):
                     "id": account.id,
                     "username": account.username,
                     "password_hash": account.password_hash,
+                    "role": account.role,
                 }
                 for account in data.accounts
             ],
@@ -465,6 +467,7 @@ class SqlAlchemyStorage(StorageInterface):
             id=account.id,
             username=account.username,
             password_hash=account.password_hash,
+            role=account.role,
         )
 
     def _flatten_columns_tasks(self, data: KanbanData) -> tuple[list[Column], list[Task]]:
@@ -538,6 +541,7 @@ class SqlAlchemyStorage(StorageInterface):
                             id=account.id,
                             username=account.username,
                             password_hash=account.password_hash,
+                            role=account.role,
                         )
                         for account in data.accounts
                     ]

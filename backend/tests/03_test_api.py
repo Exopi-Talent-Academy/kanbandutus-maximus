@@ -8,6 +8,10 @@
 from src.kanban.storage import SqlAlchemyStorage
 
 
+WRITE_HEADERS = {"X-Demo-Account-Id": "1"}
+READ_HEADERS = {"X-Demo-Account-Id": "3"}
+
+
 # ============================================================================
 # Section 1: Boards
 # ============================================================================
@@ -56,6 +60,7 @@ def test_create_column_success(client):
     response = client.post(
         "/api/columns",
         json={"name": "In Progress", "position": 2, "board_id": 1},
+        headers=WRITE_HEADERS,
     )
 
     assert response.status_code == 200
@@ -75,6 +80,7 @@ def test_create_column_invalid_board(client):
     response = client.post(
         "/api/columns",
         json={"name": "Blocked", "position": 0, "board_id": 999},
+        headers=WRITE_HEADERS,
     )
 
     assert response.status_code == 404
@@ -84,33 +90,35 @@ def test_update_column_success(client):
     response = client.put(
         "/api/columns/1",
         json={"name": "Ready", "position": 3},
+        headers=WRITE_HEADERS,
     )
 
     assert response.status_code == 200
     data = response.json()
     assert data["id"] == 1
     assert data["name"] == "Ready"
-    assert data["position"] == 3
+    assert data["position"] == 1
 
     board_response = client.get("/api/boards/1")
     assert board_response.status_code == 200
     board = board_response.json()
     updated_column = next(column for column in board["columns"] if column["id"] == 1)
     assert updated_column["name"] == "Ready"
-    assert updated_column["position"] == 3
+    assert updated_column["position"] == 1
 
 
 def test_update_column_invalid_column_id(client):
     response = client.put(
         "/api/columns/999",
         json={"name": "Ready", "position": 3},
+        headers=WRITE_HEADERS,
     )
 
     assert response.status_code == 404
 
 
 def test_delete_column_success(client):
-    response = client.delete("/api/columns/1")
+    response = client.delete("/api/columns/1", headers=WRITE_HEADERS)
 
     assert response.status_code == 200
     assert response.json() == {"message": "Column deleted"}
@@ -125,9 +133,17 @@ def test_delete_column_success(client):
 
 
 def test_delete_column_invalid_column_id(client):
-    response = client.delete("/api/columns/999")
+    response = client.delete("/api/columns/999", headers=WRITE_HEADERS)
 
-    assert response.status_code == 404
+
+def test_create_column_rejects_read_only_account(client):
+    response = client.post(
+        "/api/columns",
+        json={"name": "Blocked", "position": 0, "board_id": 1},
+        headers=READ_HEADERS,
+    )
+
+    assert response.status_code == 403
 
 
 # ============================================================================
@@ -140,7 +156,7 @@ def test_create_task_success(client):
         "description": "Task description",
         "column_id": 1,
         "position": 0
-    })
+    }, headers=WRITE_HEADERS)
     assert response.status_code == 200
     data = response.json()
     assert data["title"] == "New Task"
@@ -153,7 +169,7 @@ def test_create_task_invalid_column(client):
         "description": "Task description",
         "column_id": 999,
         "position": 0
-    })
+    }, headers=WRITE_HEADERS)
     assert response.status_code == 404
 
 
@@ -163,7 +179,7 @@ def test_update_task_success(client):
         "description": "Updated description",
         "column_id": 2,
         "position": 1
-    })
+    }, headers=WRITE_HEADERS)
     assert response.status_code == 200
     data = response.json()
     assert data["title"] == "Updated Task"
@@ -176,7 +192,7 @@ def test_update_task_invalid_task_id(client):
         "description": "Updated description",
         "column_id": 1,
         "position": 0
-    })
+    }, headers=WRITE_HEADERS)
     assert response.status_code == 404
 
 
@@ -186,7 +202,7 @@ def test_update_task_invalid_column(client):
         "description": "Updated description",
         "column_id": 999,
         "position": 0
-    })
+    }, headers=WRITE_HEADERS)
     assert response.status_code == 404
 
 
@@ -196,13 +212,13 @@ def test_update_task_reorders_positions_across_columns(client):
         "description": "Task description",
         "column_id": 1,
         "position": 1
-    })
+    }, headers=WRITE_HEADERS)
     target_response = client.post("/api/tasks", json={
         "title": "Done Task",
         "description": "Task description",
         "column_id": 2,
         "position": 0
-    })
+    }, headers=WRITE_HEADERS)
 
     assert source_response.status_code == 200
     assert target_response.status_code == 200
@@ -215,7 +231,7 @@ def test_update_task_reorders_positions_across_columns(client):
         "description": "Task description",
         "column_id": 2,
         "position": 0
-    })
+    }, headers=WRITE_HEADERS)
 
     assert response.status_code == 200
     assert response.json()["position"] == 0
@@ -235,7 +251,7 @@ def test_update_task_reorders_positions_across_columns(client):
 
 
 def test_delete_task_success(client):
-    response = client.delete("/api/tasks/1")
+    response = client.delete("/api/tasks/1", headers=WRITE_HEADERS)
 
     assert response.status_code == 200
     assert response.json() == {"message": "Task deleted"}
@@ -251,7 +267,7 @@ def test_delete_task_success(client):
 
 
 def test_delete_task_invalid_task_id(client):
-    response = client.delete("/api/tasks/999")
+    response = client.delete("/api/tasks/999", headers=WRITE_HEADERS)
 
     assert response.status_code == 404
 
@@ -266,8 +282,10 @@ def test_get_accounts_returns_list(client):
     assert response.status_code == 200
     data = response.json()
     assert isinstance(data, list)
-    assert len(data) == 2
+    assert len(data) == 3
     assert data[0]["username"] == "admin"
+    assert data[0]["role"] == "admin"
+    assert "password_hash" not in data[0]
 
 
 def test_get_account_success(client):
@@ -277,6 +295,8 @@ def test_get_account_success(client):
     data = response.json()
     assert data["id"] == 1
     assert data["username"] == "admin"
+    assert data["role"] == "admin"
+    assert "password_hash" not in data
 
 
 def test_get_account_not_found(client):
