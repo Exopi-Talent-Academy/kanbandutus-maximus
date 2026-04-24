@@ -1,7 +1,8 @@
 <app-container>
   <div
-    class="add-new-task flex items-center rounded justify-center p-1 bg-gray-200 hover:bg-gray-300 cursor-pointer"
+    class="add-new-task flex items-center rounded justify-center p-1 bg-gray-200"
     (click)="addNewTask()"
+    [ngClass]="{ 'hover:bg-gray-300 cursor-pointer': getUserId() !== '4' }"
   >
     <fa-icon [icon]="faAdd" class="mr-2" />
     <span> Add New Task</span>
