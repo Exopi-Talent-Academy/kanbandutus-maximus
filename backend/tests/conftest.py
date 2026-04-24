@@ -58,9 +58,9 @@ def create_nested_data() -> dict:
                 "role": "write"
             },
             {
-                "id": 3,
-                "username": "reader",
-                "password_hash": "reader",
+                "id": 4,
+                "username": "guest",
+                "password_hash": "guest",
                 "role": "read"
             }
         ]
@@ -96,7 +96,7 @@ def sqlalchemy_storage() -> Generator[SqlAlchemyStorage, None, None]:
 
         session.execute(text("INSERT INTO accounts (id, username, password_hash, role) VALUES (1, 'admin', 'admin', 'admin')"))
         session.execute(text("INSERT INTO accounts (id, username, password_hash, role) VALUES (2, 'writer', 'writer', 'write')"))
-        session.execute(text("INSERT INTO accounts (id, username, password_hash, role) VALUES (3, 'reader', 'reader', 'read')"))
+        session.execute(text("INSERT INTO accounts (id, username, password_hash, role) VALUES (4, 'guest', 'guest', 'read')"))
         session.execute(text("INSERT INTO board (id, name) VALUES (1, 'Test Board')"))
         session.execute(text("INSERT INTO columns (id, name, position, board_id) VALUES (1, 'To Do', 0, 1)"))
         session.execute(text("INSERT INTO columns (id, name, position, board_id) VALUES (2, 'Done', 1, 1)"))
@@ -139,7 +139,7 @@ def client(temp_data_file, monkeypatch) -> TestClient:
 
         session.execute(text("INSERT INTO accounts (id, username, password_hash, role) VALUES (1, 'admin', 'admin', 'admin')"))
         session.execute(text("INSERT INTO accounts (id, username, password_hash, role) VALUES (2, 'writer', 'writer', 'write')"))
-        session.execute(text("INSERT INTO accounts (id, username, password_hash, role) VALUES (3, 'reader', 'reader', 'read')"))
+        session.execute(text("INSERT INTO accounts (id, username, password_hash, role) VALUES (4, 'guest', 'guest', 'read')"))
         session.execute(text("INSERT INTO board (id, name) VALUES (1, 'Test Board')"))
         session.execute(text("INSERT INTO columns (id, name, position, board_id) VALUES (1, 'To Do', 0, 1)"))
         session.execute(text("INSERT INTO columns (id, name, position, board_id) VALUES (2, 'Done', 1, 1)"))

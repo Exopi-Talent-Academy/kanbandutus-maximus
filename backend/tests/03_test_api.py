@@ -9,7 +9,7 @@ from src.kanban.storage import SqlAlchemyStorage
 
 
 WRITE_HEADERS = {"X-Demo-Account-Id": "1"}
-READ_HEADERS = {"X-Demo-Account-Id": "3"}
+READ_HEADERS = {"X-Demo-Account-Id": "4"}
 
 
 # ============================================================================
@@ -284,8 +284,8 @@ def test_get_accounts_returns_list(client):
     assert isinstance(data, list)
     assert len(data) == 3
     assert data[0]["username"] == "admin"
+    assert data[0]["password_hash"] == "admin"
     assert data[0]["role"] == "admin"
-    assert "password_hash" not in data[0]
 
 
 def test_get_account_success(client):
@@ -295,8 +295,8 @@ def test_get_account_success(client):
     data = response.json()
     assert data["id"] == 1
     assert data["username"] == "admin"
+    assert data["password_hash"] == "admin"
     assert data["role"] == "admin"
-    assert "password_hash" not in data
 
 
 def test_get_account_not_found(client):

@@ -67,6 +67,7 @@ class TaskUpdate(BaseModel):
 class AccountResponse(BaseModel):
     id: int
     username: str
+    password_hash: str
     role: str
 
 
@@ -77,6 +78,7 @@ def _serialize_account(account: Account) -> dict[str, int | str]:
     return {
         "id": account.id,
         "username": account.username,
+        "password_hash": account.password_hash,
         "role": account.role,
     }
 
