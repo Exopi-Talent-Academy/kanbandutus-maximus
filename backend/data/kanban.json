@@ -136,22 +136,26 @@
     {
       "id": 1,
       "username": "admin",
-      "password_hash": "admin"
+      "password_hash": "admin",
+      "role": "admin"
     },
     {
       "id": 2,
       "username": "manager",
-      "password_hash": "manager"
+      "password_hash": "manager",
+      "role": "write"
     },
         {
       "id": 3,
       "username": "developer",
-      "password_hash": "developer"
+      "password_hash": "developer",
+      "role": "write"
     },
         {
       "id": 4,
       "username": "guest",
-      "password_hash": "guest"
+      "password_hash": "guest",
+      "role": "read"
     }
   ]
 }

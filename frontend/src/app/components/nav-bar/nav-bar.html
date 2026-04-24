@@ -3,11 +3,15 @@
     <div class="logo">
       <p>logo</p>
     </div>
-    <div class="search">
-      <input class="search-text" type="text" />
-    </div>
-    <div class="notification">
-      <p>profile</p>
-    </div>
+    @if (userName()) {
+      <div class="flex gap-2">
+        <div class="notification">
+          <p class="hover:cursor-pointer">{{ userName() }}</p>
+        </div>
+        <div class="logout">
+          <fa-icon title="Logout" (click)="logoutUser()" [icon]="faSignOut" class="mr-2" />
+        </div>
+      </div>
+    }
   </div>
 </app-container>

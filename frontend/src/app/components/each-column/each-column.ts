@@ -49,4 +49,9 @@ export class EachColumn implements OnInit, OnChanges {
     };
     this.updatedTasks.set([...this.tasks, task]);
   }
+
+  onDragStart(event: DragEvent) {
+    this.taskService.onColumnMove(this.columnName, this.columnId);
+    // this.taskService.onColumnMove()
+  }
 }

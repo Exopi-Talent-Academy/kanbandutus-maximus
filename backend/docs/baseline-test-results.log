@@ -1,0 +1,44 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /home/uw/solo/repositories/public/kanban/kanban-BE/backend
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collected 144 items
+
+tests/00_test_storage.py ............................................... [ 32%]
+                                                                         [ 32%]
+tests/01_test_service.py ..........FF..FF..........FF..FF..FF..........F [ 65%]
+F..FF..FF......                                                          [ 75%]
+tests/02_test_validation.py FFFFFFFF......                               [ 85%]
+tests/03_test_api.py ......F..............                               [100%]
+
+=========================== short test summary info ============================
+FAILED tests/01_test_service.py::test_service_update_board_not_found[json] - ...
+FAILED tests/01_test_service.py::test_service_update_board_not_found[sqlalchemy]
+FAILED tests/01_test_service.py::test_service_delete_board_not_found[json] - ...
+FAILED tests/01_test_service.py::test_service_delete_board_not_found[sqlalchemy]
+FAILED tests/01_test_service.py::test_service_create_column_invalid_board[json]
+FAILED tests/01_test_service.py::test_service_create_column_invalid_board[sqlalchemy]
+FAILED tests/01_test_service.py::test_service_update_column_not_found[json]
+FAILED tests/01_test_service.py::test_service_update_column_not_found[sqlalchemy]
+FAILED tests/01_test_service.py::test_service_delete_column_not_found[json]
+FAILED tests/01_test_service.py::test_service_delete_column_not_found[sqlalchemy]
+FAILED tests/01_test_service.py::test_service_create_task_invalid_column[json]
+FAILED tests/01_test_service.py::test_service_create_task_invalid_column[sqlalchemy]
+FAILED tests/01_test_service.py::test_service_update_task_not_found[json] - s...
+FAILED tests/01_test_service.py::test_service_update_task_not_found[sqlalchemy]
+FAILED tests/01_test_service.py::test_service_delete_task_not_found[json] - s...
+FAILED tests/01_test_service.py::test_service_delete_task_not_found[sqlalchemy]
+FAILED tests/02_test_validation.py::test_create_column_rejects_empty_name - a...
+FAILED tests/02_test_validation.py::test_update_column_rejects_empty_name - a...
+FAILED tests/02_test_validation.py::test_create_task_rejects_empty_title - as...
+FAILED tests/02_test_validation.py::test_update_task_rejects_empty_title - as...
+FAILED tests/02_test_validation.py::test_create_column_rejects_negative_position
+FAILED tests/02_test_validation.py::test_update_column_rejects_negative_position
+FAILED tests/02_test_validation.py::test_create_task_rejects_negative_position
+FAILED tests/02_test_validation.py::test_update_task_rejects_negative_position
+FAILED tests/03_test_api.py::test_update_column_success - assert 1 == 3
+======================== 25 failed, 119 passed in 4.27s ========================
+#########################################
+python -m pytest --tb=no tests > current_results.log
+diff current_results.log docs/baseline-test-results.log

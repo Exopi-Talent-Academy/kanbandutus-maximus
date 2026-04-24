@@ -22,7 +22,9 @@ export class EachRow {
 
   onDragDrop(event: DragEvent) {
     event.preventDefault();
+    const target = event.target as EventTarget | null;
 
+    // if (target instanceof HTMLElement && target?.tagName === 'DIV') {
     const taskToMove = this.taskService.moveTask;
 
     this.taskService
@@ -34,15 +36,16 @@ export class EachRow {
         this.taskService.onMoveTaskComplete();
         // this.taskService.showUpdateNotification();
       });
+    // }
   }
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
-    console.log(event);
+    // console.log(event);
   }
 
   onDragLeave(event: DragEvent) {
     event.preventDefault();
-    console.log();
+    // console.log();
   }
 }
