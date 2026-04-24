@@ -1,0 +1,7 @@
+:host {
+    width: 100%;
+    .app-container {
+        width: 100%;
+        padding: 12px;
+    }
+}

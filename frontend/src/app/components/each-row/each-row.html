@@ -1,0 +1,10 @@
+<app-container>
+  <div
+    class="each-row on-drag-over"
+    (drop)="onDragDrop($event)"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+  >
+    <app-each-task [task]="task" [boardId]="boardId" [columnId]="columnId"></app-each-task>
+  </div>
+</app-container>

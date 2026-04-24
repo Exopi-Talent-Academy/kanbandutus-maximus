@@ -1,0 +1,39 @@
+<app-container>
+  <app-nav-bar></app-nav-bar>
+  <app-header></app-header>
+  <app-board></app-board>
+</app-container>
+
+@if (isEditable()) {
+  <div class="shadow">
+    <div class="modal">
+      <div class="task-form relative">
+        <span class="close-button" (click)="cancelEdit()"><fa-icon [icon]="faClose" /></span>
+        <app-task-form [currentTask]="task()"></app-task-form>
+      </div>
+    </div>
+  </div>
+}
+
+@if (!login()) {
+  <div class="shadow">
+    <div class="modal">
+      <div class="login-modal">
+        <p class="heading">Login</p>
+      </div>
+      <div class="modal-body">
+        <label
+          >User:
+          <input class="user" type="text" [(ngModel)]="username" />
+        </label>
+        <label
+          >Password:
+          <input class="password" type="password" [(ngModel)]="password" />
+        </label>
+      </div>
+      <div class="footer">
+        <button (click)="submitForm()">Login</button>
+      </div>
+    </div>
+  </div>
+}

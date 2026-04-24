@@ -1,0 +1,14 @@
+:host {
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px;
+        background-color: #123456;
+        color:#fff;
+    }
+    .logout:hover {
+        cursor:pointer;
+        color: #d5cfcf;
+    }
+}
