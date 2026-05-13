@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environments';
 
-const BASE_URL = `https://kanbanjo-a3azathdfffde7ey.denmarkeast-01.azurewebsites.net/api`;
+const BASE_URL = `http://localhost:8000/api`;
 
 @Injectable({
   providedIn: 'root',
