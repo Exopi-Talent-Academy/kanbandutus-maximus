@@ -1,5 +1,5 @@
 <app-container>
-  <div class="task-form relative flex flex-col gap-2">
+  <div class="task-form relative flex flex-col gap-2 m-4">
     <div class="flex gap-4">
       <label class="title font-bold"
         >Title:
@@ -32,7 +32,7 @@
       />
     </label>
   </div>
-  <div class="flex justify-between mt-4">
+  <div class="flex justify-between m-4">
     @if (addTaskMode) {
       <button class="bg-gray-200 p-2" (click)="addTask()">
         <fa-icon [icon]="faAdd" class="mr-2" />

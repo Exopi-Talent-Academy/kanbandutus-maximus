@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Kanban Board API is a REST API service that provides endpoints for managing Kanban boards, columns, and tasks. It is built with FastAPI and uses JSON file storage.
+The Kanban Board API is a REST API service that provides endpoints for managing Kanban boards, columns, tasks, and accounts. It is built with FastAPI and supports JSON and SQLite storage.
 
 **Base URL:** `http://localhost:8000`  
 **Documentation:** `http://localhost:8000/docs` (Swagger UI)
@@ -283,6 +283,59 @@ Deletes a column and all its tasks. *(Not implemented)*
 ---
 
 ## Tasks
+
+## Accounts
+
+### List Accounts
+
+Returns all accounts.
+
+**Endpoint:** `GET /api/accounts`
+
+**Parameters:** None
+
+**Response:** `200 OK`
+```json
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "password_hash": "admin"
+  }
+]
+```
+
+---
+
+### Get Account
+
+Returns a specific account by ID.
+
+**Endpoint:** `GET /api/accounts/{account_id}`
+
+**Parameters:**
+| Name | Type | Location | Description |
+|------|------|----------|-------------|
+| account_id | integer | path | Account ID |
+
+**Response:** `200 OK`
+```json
+{
+  "id": 1,
+  "username": "admin",
+  "password_hash": "admin"
+}
+```
+
+**Error Response:** `404 Not Found`
+```json
+{
+  "type": "https://api.example.com/errors/account-not-found",
+  "title": "Account Not Found",
+  "status": 404,
+  "detail": "Account with id=999 not found"
+}
+```
 
 ### Get Tasks by Column
 

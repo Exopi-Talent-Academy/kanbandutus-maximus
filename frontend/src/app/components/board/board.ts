@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { Task, BoardType } from '../../models/types';
 import { Tasks } from '../../services/tasks';
 import { map } from 'rxjs';
+import { ColumnContainer } from '../column-container/column-container';
 
 @Component({
   selector: 'app-board',
-  imports: [EachColumn, Container, CommonModule],
+  imports: [EachColumn, Container, CommonModule, ColumnContainer],
   templateUrl: './board.html',
   styleUrl: './board.css',
 })

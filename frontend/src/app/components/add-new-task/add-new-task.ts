@@ -22,7 +22,7 @@ export class AddNewTask {
       column_id: this.columnId,
       assignee: '',
       description: '',
-      position: 0,
+      position: 1110,
     });
     this.taskService.togggleAddTaskMode(true);
   }

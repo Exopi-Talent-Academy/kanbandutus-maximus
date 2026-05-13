@@ -14,3 +14,26 @@
     </div>
   </div>
 }
+
+@if (!login()) {
+  <div class="shadow">
+    <div class="modal">
+      <div class="login-modal">
+        <p class="heading">Login</p>
+      </div>
+      <div class="modal-body">
+        <label
+          >User:
+          <input class="user" type="text" [(ngModel)]="username" />
+        </label>
+        <label
+          >Password:
+          <input class="password" type="password" [(ngModel)]="password" />
+        </label>
+      </div>
+      <div class="footer">
+        <button (click)="submitForm()">Login</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BoardType, Task } from '../models/types';
+import { BoardType, Task, User } from '../models/types';
 import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environments';
 
-// const BASE_URL = 'http://localhost:8000/api';
-//const BASE_URL = 'http://localhost:4201';
-const BASE_URL = 'http://127.0.0.1:8000/api';
+const BASE_URL = `http://localhost:8000/api`;
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +21,26 @@ export class Tasks {
   addTaskMode = new BehaviorSubject<boolean>(false);
 
   currentBoard: BoardType | null = null;
+
+  currentUser = new Subject<User>();
+
+  movingColumn = {
+    name: '',
+    position: 1111,
+  };
+
+  onColumnMove(name: string, position: number) {
+    this.movingColumn.name = name;
+    this.movingColumn.position = position;
+  }
+
+  setUser(user: User) {
+    this.currentUser.next(user);
+  }
+
+  getUsers() {
+    return this.http.get<User[]>(`${BASE_URL}/accounts`);
+  }
 
   setCurrentBoard(board: BoardType | null): void {
     this.currentBoard = board;
@@ -93,5 +112,11 @@ export class Tasks {
     setTimeout(() => {
       this.updateAvailable.next(false);
     }, 3000);
+  }
+
+  updateColumn(column: { name: string; position: number }, columnId: number) {
+    return this.http
+      .put<any>(`${BASE_URL}/columns/${columnId}`, column)
+      .pipe(tap(() => this.showUpdateNotification()));
   }
 }

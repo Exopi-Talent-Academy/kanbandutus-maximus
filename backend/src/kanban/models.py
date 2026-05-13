@@ -26,6 +26,14 @@ class Task:
     description: str = ""
     assignee: str = ""
     position: int = 0
+    
+    
+@dataclass
+class Account:
+    id: int
+    username: str
+    password_hash: str
+    role: str = "read"
 
 
 @dataclass
@@ -33,7 +41,7 @@ class KanbanData:
     boards: list[Board] = field(default_factory=list)
     columns: list[Column] = field(default_factory=list)
     tasks: list[Task] = field(default_factory=list)
-
+    accounts: list[Account] = field(default_factory=list)
     def get_board(self, board_id: int) -> Optional[Board]:
         for board in self.boards:
             if board.id == board_id:
@@ -52,9 +60,6 @@ class KanbanData:
                 return task
         return None
 
-    def get_columns_by_board(self, board_id: int) -> list[Column]:
-        return [c for c in self.columns if c.board_id == board_id]
-
     def get_tasks_by_column(self, column_id: int) -> list[Task]:
         return [t for t in self.tasks if t.column_id == column_id]
 
@@ -65,4 +70,6 @@ class KanbanData:
             return max((c.id for c in self.columns), default=0) + 1
         elif entity_type == "task":
             return max((t.id for t in self.tasks), default=0) + 1
+        elif entity_type == "account":
+            return max((a.id for a in self.accounts), default=0) + 1
         return 1

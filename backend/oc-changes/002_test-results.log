@@ -1,0 +1,120 @@
+================================================================================
+TEST SUITE RESULTS
+================================================================================
+
+EXECUTION DATE: 2026-04-16
+TOTAL TESTS: 42
+PASSED: 42
+FAILED: 0
+
+================================================================================
+ACTIVE ENDPOINTS TESTED (API)
+================================================================================
+
+GET /api/boards
+  Status: WORKING
+  Tests: 2 passed
+
+GET /api/boards/{id}
+  Status: WORKING
+  Tests: 2 passed (success + 404)
+
+GET /api/columns/{id}/tasks
+  Status: WORKING
+  Tests: 3 passed (success + empty column + 404)
+
+POST /api/tasks
+  Status: WORKING
+  Tests: 2 passed (success + invalid column)
+
+PUT /api/tasks/{id}
+  Status: WORKING
+  Tests: 3 passed (success + invalid task + invalid column)
+
+================================================================================
+STORAGE BACKENDS TESTED (PARAMETERIZED)
+================================================================================
+
+JsonStorage
+  Status: WORKING
+  Tests: 15 passed (all CRUD operations)
+
+SqlAlchemyStorage
+  Status: WORKING
+  Tests: 15 passed (all CRUD operations)
+
+================================================================================
+CRUD OPERATIONS COVERED
+================================================================================
+
+Boards:
+  [x] get_board
+  [x] get_board (not found)
+  [x] create_board
+  [x] update_board
+  [x] delete_board
+
+Columns:
+  [x] get_column
+  [x] create_column
+  [x] create_column (invalid board)
+  [x] update_column
+  [x] delete_column
+
+Tasks:
+  [x] get_task
+  [x] create_task
+  [x] create_task (invalid column)
+  [x] update_task
+  [x] delete_task
+
+================================================================================
+DISCOVERED ISSUES
+================================================================================
+
+1. TEST FIXTURES INCOMPATIBLE WITH STORAGE CODE
+   - JsonStorage expects nested format: boards -> columns -> tasks
+   - Original conftest.py used flat format: separate boards/columns/tasks arrays
+   - Root cause: _dict_to_kanban() iterates nested format first, flat format
+     code never reached
+   - Resolution: Updated fixtures to use nested format
+
+2. COMMENTED-OUT ENDPOINTS NOT TESTED
+   - POST /api/boards
+   - PUT /api/boards/{id}
+   - DELETE /api/boards/{id}
+   - POST /api/columns
+   - PUT /api/columns/{id}
+   - DELETE /api/columns/{id}
+   - DELETE /api/tasks/{id}
+   - GET /api/tasks/{id}
+   - GET /api/boards/{id}/columns
+   - GET /api/tasks/{id}
+   These were intentionally left untested per requirements
+
+3. JSON BACKWARD COMPATIBILITY BROKEN
+   - JsonStorage._dict_to_kanban() has code for flat format but it never runs
+   - The nested format loop executes first and fails on flat data
+   - Production kanban.json uses nested format, so this is not a production issue
+   - But test fixtures with flat format will fail
+
+================================================================================
+TEST FILE STRUCTURE
+================================================================================
+
+tests/
+  conftest.py              - Shared fixtures (parametrized storage, client)
+  test_storage.py           - CRUD tests for both backends (30 tests)
+  test_api_boards.py        - Board endpoint tests (4 tests)
+  test_api_columns.py       - Column endpoint tests (3 tests)
+  test_api_tasks.py         - Task endpoint tests (5 tests)
+
+================================================================================
+NOTES
+================================================================================
+
+- Sequential (parametrized) testing approach used as planned
+- Each storage test runs twice: once for JSON, once for SQLite
+- API tests use SQLite backend by default
+- Fresh database state for each test via fixtures
+- In-memory SQLite used for SqlAlchemyStorage tests

@@ -39,6 +39,7 @@ DEFAULT_CORS_ORIGINS = [
     "http://localhost:4200",   # Angular dev server
     "http://localhost:3000",   # React/Vue dev server
     "http://example.com:3000", # Example staging/production
+    "https://kanbanjo.z55.web.core.windows.net",  # Azure Static Web App
 ]
 
 

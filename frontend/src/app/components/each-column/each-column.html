@@ -1,6 +1,8 @@
 <app-container>
   <div class="each-column">
-    <p class="font-bold mb-4 text-center">{{ columnName }}</p>
+    <p class="font-bold mb-4 text-center" draggable="true" (dragstart)="onDragStart($event)">
+      {{ columnName }}
+    </p>
     @for (task of updatedTasks(); track task.id) {
       <app-each-row [task]="task" [boardId]="boardId" [columnId]="columnId"> </app-each-row>
     }
